@@ -149,8 +149,30 @@ describe('User Registration', function() {
         registrationUrl.should.equal("http://127.0.0.1:8000/register");
 
         //fill the registration form
+        await driver.findElement(By.xpath(firstName)).sendKeys('user');
+
+        //fill last name
+        await driver.findElement(By.xpath(lastName)).sendKeys('testing');
+
         const randomEmail = await generateInvalidRandomEmail();
         await driver.findElement(By.xpath(email)).sendKeys(randomEmail);
+
+        //fill phone
+        await driver.findElement(By.xpath(phone)).sendKeys('08123456789');
+
+        //fill province 
+        await driver.findElement(By.xpath(province)).click();
+        await driver.wait(until.elementIsVisible(driver.findElement(By.css(provinceDropdownCss))), 5000);
+        await driver.findElement(By.css(provinceDropdownCss)).click();
+
+        //fill city
+        await driver.findElement(By.xpath(city)).click();
+        await driver.wait(until.elementIsVisible(driver.findElement(By.css(cityDropdownCss))), 5000);
+        await driver.findElement(By.css(cityDropdownCss)).click();
+
+        //fill password
+        await driver.findElement(By.xpath(password)).sendKeys('12345678');
+        await driver.findElement(By.xpath(passwordConfirmation)).sendKeys('12345678')
 
         await scrollDown(driver);
 
@@ -160,7 +182,7 @@ describe('User Registration', function() {
 
     });
 
-    it ('user should register with registered email', async function () {
+    it ('user should not register with registered email', async function () {
 
         let homeTitle = await driver.getTitle();
         homeTitle.should.equal("Propertio - Home");
@@ -183,7 +205,29 @@ describe('User Registration', function() {
         registrationUrl.should.equal("http://127.0.0.1:8000/register");
 
         //fill the registration form
+        await driver.findElement(By.xpath(firstName)).sendKeys('user');
+
+        //fill last name
+        await driver.findElement(By.xpath(lastName)).sendKeys('testing');
+
         await driver.findElement(By.xpath(email)).sendKeys("usertesting1@mail.com");
+
+        await driver.findElement(By.xpath(phone)).sendKeys('08123456789');
+
+         //fill province 
+        await driver.findElement(By.xpath(province)).click();
+        await driver.wait(until.elementIsVisible(driver.findElement(By.css(provinceDropdownCss))), 5000);
+        await driver.findElement(By.css(provinceDropdownCss)).click();
+
+        //fill city
+        await driver.findElement(By.xpath(city)).click();
+        await driver.wait(until.elementIsVisible(driver.findElement(By.css(cityDropdownCss))), 5000);
+        await driver.findElement(By.css(cityDropdownCss)).click();
+
+        //fill password
+        await driver.findElement(By.xpath(password)).sendKeys('12345678');
+        await driver.findElement(By.xpath(passwordConfirmation)).sendKeys('12345678')
+
 
         await scrollDown(driver);
 
@@ -250,6 +294,8 @@ describe('User Registration', function() {
 
         //submit the form
         await driver.findElement(By.id(submitButtonId)).click();
+        let currentregistrationUrl = await driver.getCurrentUrl();
+        currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
 
         await driver.wait(until.elementIsVisible(driver.findElement(By.id("password_confirmation-error"))), 10000);
         let emailError = await driver.findElement(By.id("password_confirmation-error")).getText();
@@ -311,6 +357,8 @@ describe('User Registration', function() {
 
         //submit the form
         await driver.findElement(By.id(submitButtonId)).click();
+        let currentregistrationUrl = await driver.getCurrentUrl();
+        currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
 
         await driver.wait(until.elementIsVisible(driver.findElement(By.id("password-error"))), 10000);
         let emailError = await driver.findElement(By.id("password-error")).getText();
@@ -343,6 +391,8 @@ describe('User Registration', function() {
 
         //submit the form
         await driver.findElement(By.id(submitButtonId)).click();
+        let currentregistrationUrl = await driver.getCurrentUrl();
+        currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
 
         await driver.wait(until.elementIsVisible(driver.findElement(By.id("first_name-error"))), 10000);
         let firstNameErrror = await driver.findElement(By.id("first_name-error")).getText();
@@ -402,6 +452,8 @@ describe('User Registration', function() {
         await scrollDown(driver);
         //submit the form
         await driver.findElement(By.id(submitButtonId)).click();
+        let currentregistrationUrl = await driver.getCurrentUrl();
+        currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
 
         await driver.wait(until.elementIsVisible(driver.findElement(By.id("phone-error"))), 10000);
         let registeredPhoneError = await driver.findElement(By.id("phone-error")).getText();
@@ -436,6 +488,8 @@ describe('User Registration', function() {
             await scrollDown(driver);
             //submit the form
             await driver.findElement(By.id(submitButtonId)).click();
+            let currentregistrationUrl = await driver.getCurrentUrl();
+            currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
         
             await driver.wait(until.elementIsVisible(driver.findElement(By.id("phone-error"))), 10000);
             let registeredPhoneError = await driver.findElement(By.id("phone-error")).getText();
@@ -478,6 +532,8 @@ describe('User Registration', function() {
         await scrollDown(driver);
         //submit the form
         await driver.findElement(By.id(submitButtonId)).click();
+        let currentregistrationUrl = await driver.getCurrentUrl();
+        currentregistrationUrl.should.equal("http://127.0.0.1:8000/register")
 
         await driver.wait(until.elementIsVisible(driver.findElement(By.id("phone-error"))), 10000);
         let registeredPhoneError = await driver.findElement(By.id("phone-error")).getText();
