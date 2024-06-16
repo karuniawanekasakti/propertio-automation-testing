@@ -64,116 +64,134 @@ describe('Admin list akun', function() {
         await delay(3000);
     });
 
-    it ('Admin should can see created account', async function() {
-        await clickElement(driver, getMenuElement.listAkunMenuXpath);
-        await assertTitle(driver, "Propertio - List Akun");
-
-        await delay(3000);
-
-        await verifyElementExists(driver, getTipeFasilitasMenuElement.listWrapper);
-
+    it ('Admin should can see list account', async function() {
+        try {
+            await clickElement(driver, getMenuElement.listAkunMenuXpath);
+            await assertTitle(driver, "Propertio - List Akun");
+    
+            await delay(3000);
+    
+            await verifyElementExists(driver, getTipeFasilitasMenuElement.listWrapper);
+    
+        } catch (error) {
+            throw new Error(`Test to see list account failed: ${error.message}`); 
+        }
     });
 
 
     it ('Admin should can add active akun agent', async function() {
-
-        await clickElement(driver, getTipeFasilitasMenuElement.addAkunButtonXpath);
-        await assertTitle(driver, "Propertio - Create Akun");
-
-        await delay(3000);
-
-        const profilePicture = await driver.findElement(By.xpath(getListAkunFormElement.profilePicture));
-        await profilePicture.sendKeys(getGlobalVariable.profilePictureImage);
-        await enterText(driver, getListAkunFormElement.firstName, getGlobalVariable.agentName);
-        await enterText(driver, getListAkunFormElement.lastName, getGlobalVariable.randomLastname);
-        await clickElement(driver, getListAkunFormElement.roleDropDownButton);
-        await clickElement(driver, getListAkunFormElement.roleDropDownAgent);
-        await enterText(driver, getListAkunFormElement.email, randomEmail);
-        await enterText(driver, getListAkunFormElement.phone, "628123456789");
-        await clickElement(driver, getListAkunFormElement.statusDropDownButton);
-        await clickElement(driver, getListAkunFormElement.statusActive);
-        await clickElement(driver, getListAkunFormElement.provinceDropDownButton);
-        await waitForElementVisible(driver, getListAkunFormElement.provinceDropDownItem);
-        await clickElement(driver, getListAkunFormElement.provinceDropDownItem);
-        await clickElement(driver, getListAkunFormElement.cityDropDownButton);
-        await waitForElementVisible(driver, getListAkunFormElement.cityDropDownItem);
-        await clickElement(driver, getListAkunFormElement.cityDropDownItem);
-        await enterText(driver, getListAkunFormElement.address, "Jalan Test");
-        await enterText(driver, getListAkunFormElement.password, "11111111");
-        await enterText(driver, getListAkunFormElement.confirmationPassword, "11111111");
-
-        await delay(3000);
-
-        await clickElement(driver, getListAkunFormElement.addAkunButton);
-        await waitForElementVisible(driver, getPopUpElement.popUp);
-        await assertVisibleText(driver, getPopUpElement.popUpText, "Akun berhasil dibuat!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-
-        await delay(3000);
-
-    })
+        try {
+            await clickElement(driver, getTipeFasilitasMenuElement.addAkunButtonXpath);
+            await assertTitle(driver, "Propertio - Create Akun");
+    
+            await delay(3000);
+    
+            const profilePicture = await driver.findElement(By.xpath(getListAkunFormElement.profilePicture));
+            await profilePicture.sendKeys(getGlobalVariable.profilePictureImage);
+            await enterText(driver, getListAkunFormElement.firstName, getGlobalVariable.agentName);
+            await enterText(driver, getListAkunFormElement.lastName, getGlobalVariable.randomLastname);
+            await clickElement(driver, getListAkunFormElement.roleDropDownButton);
+            await clickElement(driver, getListAkunFormElement.roleDropDownAgent);
+            await enterText(driver, getListAkunFormElement.email, randomEmail);
+            await enterText(driver, getListAkunFormElement.phone, "628123456789");
+            await clickElement(driver, getListAkunFormElement.statusDropDownButton);
+            await clickElement(driver, getListAkunFormElement.statusActive);
+            await clickElement(driver, getListAkunFormElement.provinceDropDownButton);
+            await waitForElementVisible(driver, getListAkunFormElement.provinceDropDownItem);
+            await clickElement(driver, getListAkunFormElement.provinceDropDownItem);
+            await clickElement(driver, getListAkunFormElement.cityDropDownButton);
+            await waitForElementVisible(driver, getListAkunFormElement.cityDropDownItem);
+            await clickElement(driver, getListAkunFormElement.cityDropDownItem);
+            await enterText(driver, getListAkunFormElement.address, "Jalan Test");
+            await enterText(driver, getListAkunFormElement.password, "11111111");
+            await enterText(driver, getListAkunFormElement.confirmationPassword, "11111111");
+    
+            await delay(3000);
+    
+            await clickElement(driver, getListAkunFormElement.addAkunButton);
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await assertVisibleText(driver, getPopUpElement.popUpText, "Akun berhasil dibuat!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+    
+            await delay(3000);
+    
+        } catch (error) {
+            throw new Error(`Test to add active akun agent failed: ${error.message}`); 
+        }
+    });
 
     it ('Verified account created', async function() {
-        await assertUrl(driver, "http://127.0.0.1:8000/account")
-
-        await enterText(driver, getListAkunMenuElement.searchInputXpath, getGlobalVariable.agentFullName);   
-        await delay(3000);
-
-        await verifyElementExists(driver, `//td[normalize-space()= '${getGlobalVariable.agentFullName}']`);
-
+        try {
+            await assertUrl(driver, "http://127.0.0.1:8000/account");
+    
+            await enterText(driver, getListAkunMenuElement.searchInputXpath, getGlobalVariable.agentFullName);   
+            await delay(3000);
+    
+            await verifyElementExists(driver, `//td[normalize-space()= '${getGlobalVariable.agentFullName}']`);
+    
+        } catch (error) {
+            throw new Error(`Test to verify account creation failed: ${error.message}`); 
+        }
     });
 
 
     it ('Admin input phone number less than 4', async function() {
+        try {
+            await clickElement(driver, getTipeFasilitasMenuElement.addAkunButtonXpath);
+            await assertTitle(driver, "Propertio - Create Akun");
 
-        await clickElement(driver, getTipeFasilitasMenuElement.addAkunButtonXpath);
-        await assertTitle(driver, "Propertio - Create Akun");
+            await delay(3000);
 
-        await delay(3000);
+            const profilePicture = await driver.findElement(By.xpath(getListAkunFormElement.profilePicture));
+            await profilePicture.sendKeys(getGlobalVariable.profilePictureImage);
+            await enterText(driver, getListAkunFormElement.firstName, firstName);
+            await enterText(driver, getListAkunFormElement.lastName, lastName);
+            await clickElement(driver, getListAkunFormElement.roleDropDownButton);
+            await clickElement(driver, getListAkunFormElement.roleDropDownAgent);
+            await enterText(driver, getListAkunFormElement.email, randomEmail);
+            await enterText(driver, getListAkunFormElement.phone, "6284");
+            await clickElement(driver, getListAkunFormElement.statusDropDownButton);
+            await clickElement(driver, getListAkunFormElement.statusActive);
+            await clickElement(driver, getListAkunFormElement.provinceDropDownButton);
+            await clickElement(driver, getListAkunFormElement.provinceDropDownItem);
+            await clickElement(driver, getListAkunFormElement.cityDropDownButton);
+            await clickElement(driver, getListAkunFormElement.cityDropDownItem);
+            await enterText(driver, getListAkunFormElement.address, "Jalan Test");
+            await enterText(driver, getListAkunFormElement.password, "11111111");
+            await enterText(driver, getListAkunFormElement.confirmationPassword, "11111111");
 
-        const profilePicture = await driver.findElement(By.xpath(getListAkunFormElement.profilePicture));
-        await profilePicture.sendKeys(getGlobalVariable.profilePictureImage);
-        await enterText(driver, getListAkunFormElement.firstName, firstName);
-        await enterText(driver, getListAkunFormElement.lastName, lastName);
-        await clickElement(driver, getListAkunFormElement.roleDropDownButton);
-        await clickElement(driver, getListAkunFormElement.roleDropDownAgent);
-        await enterText(driver, getListAkunFormElement.email, randomEmail);
-        await enterText(driver, getListAkunFormElement.phone, "6284");
-        await clickElement(driver, getListAkunFormElement.statusDropDownButton);
-        await clickElement(driver, getListAkunFormElement.statusActive);
-        await clickElement(driver, getListAkunFormElement.provinceDropDownButton);
-        await clickElement(driver, getListAkunFormElement.provinceDropDownItem);
-        await clickElement(driver, getListAkunFormElement.cityDropDownButton);
-        await clickElement(driver, getListAkunFormElement.cityDropDownItem);
-        await enterText(driver, getListAkunFormElement.address, "Jalan Test");
-        await enterText(driver, getListAkunFormElement.password, "11111111");
-        await enterText(driver, getListAkunFormElement.confirmationPassword, "11111111");
+            await delay(3000);
 
-        await delay(3000);
+            await clickElement(driver, getListAkunFormElement.addAkunButton);
 
-        await clickElement(driver, getListAkunFormElement.addAkunButton);
+            await scrollToElement(driver, getListAkunFormErrorElement.phoneError);
+            await assertText(driver, getListAkunFormErrorElement.phoneError, "Format nomor telepon tidak valid.");
 
-        await scrollToElement(driver, getListAkunFormErrorElement.phoneError);
-        await assertText(driver, getListAkunFormErrorElement.phoneError, "Format nomor telepon tidak valid.");
+            await delay(2000);
 
-        await delay(2000);
+        } catch (error) {
+            throw new Error(`Test to verify account creation failed: ${error.message}`); 
+        }
     }); 
 
-    it ('Admin input phone number with invalid format', async function() {
-
-        await scrollToElement(driver, getListAkunFormElement.phone);
-        await clearInput(driver, getListAkunFormElement.phone);
-
-        await enterText(driver, getListAkunFormElement.phone, "343242323344");
-
-        await scrollToElement(driver, getListAkunFormElement.addAkunButton);
-        await clickElement(driver, getListAkunFormElement.addAkunButton);
-
-        await scrollToElement(driver, getListAkunFormErrorElement.phoneError);
-        await assertText(driver, getListAkunFormErrorElement.phoneError, "Format nomor telepon tidak valid.");
-
-        await delay(2000);
-
+    it('Admin input phone number with invalid format', async function() {
+        try {
+            await scrollToElement(driver, getListAkunFormElement.phone);
+            await clearInput(driver, getListAkunFormElement.phone);
+    
+            await enterText(driver, getListAkunFormElement.phone, "343242323344");
+    
+            await scrollToElement(driver, getListAkunFormElement.addAkunButton);
+            await clickElement(driver, getListAkunFormElement.addAkunButton);
+    
+            await scrollToElement(driver, getListAkunFormErrorElement.phoneError);
+            await assertText(driver, getListAkunFormErrorElement.phoneError, "Format nomor telepon tidak valid.");
+    
+            await delay(2000);
+    
+        } catch (error) {
+            throw new Error(`Admin input phone number with invalid format test failed: ${error.message}`);
+        }
     });
 
     it ('Admin input firstname character less than 5', async function() {
@@ -201,24 +219,28 @@ describe('Admin list akun', function() {
     });
 
     
-    it ('Admin cant store acount with existed email', async function() {
-        
-        await scrollToElement(driver, getListAkunFormElement.email);
-        await clearInput(driver, getListAkunFormElement.email);
-
-        await enterText(driver, getListAkunFormElement.email, getGlobalVariable.validAgentEmail);
-
-        await scrollToElement(driver, getListAkunFormElement.addAkunButton);
-        await clickElement(driver, getListAkunFormElement.addAkunButton);
-
-        await scrollToElement(driver, getListAkunFormErrorElement.emailError);
-        await assertText(driver, getListAkunFormErrorElement.emailError, "Email sudah ada sebelumnya.");
-
-        await delay(2000);
+    it('Admin cant store account with existed email', async function() {
+        try {
+            await scrollToElement(driver, getListAkunFormElement.email);
+            await clearInput(driver, getListAkunFormElement.email);
+    
+            await enterText(driver, getListAkunFormElement.email, getGlobalVariable.validAgentEmail);
+    
+            await scrollToElement(driver, getListAkunFormElement.addAkunButton);
+            await clickElement(driver, getListAkunFormElement.addAkunButton);
+    
+            await scrollToElement(driver, getListAkunFormErrorElement.emailError);
+            await assertText(driver, getListAkunFormErrorElement.emailError, "Email sudah ada sebelumnya.");
+    
+            await delay(2000);
+    
+        } catch (error) {
+            throw new Error(`Admin cant store account with existed email test failed: ${error.message}`);
+        }
     });
 
-    it ('Admin cant store account with password less than 4 character', async function() {
-            
+    it('Admin cant store account with password less than 4 character', async function() {
+        try {
             await scrollToElement(driver, getListAkunFormElement.password);
             await clearInput(driver, getListAkunFormElement.password);
     
@@ -231,23 +253,26 @@ describe('Admin list akun', function() {
             await assertText(driver, getListAkunFormErrorElement.passwordError, "Kata sandi minimal berisi 5 karakter.");
     
             await delay(2000);
+    
+        } catch (error) {
+            throw new Error(`Admin cant store account with password less than 4 character test failed: ${error.message}`);
+        }
     });
 
     it ('Admin cant store account with password confirmation not match', async function() {
-                
-            await scrollToElement(driver, getListAkunFormElement.password);
-            await clearInput(driver, getListAkunFormElement.password);
+        await scrollToElement(driver, getListAkunFormElement.password);
+        await clearInput(driver, getListAkunFormElement.password);
     
-            await enterText(driver, getListAkunFormElement.password, "111111111");
-            await enterText(driver, getListAkunFormElement.confirmationPassword, "12345678");
+        await enterText(driver, getListAkunFormElement.password, "111111111");
+        await enterText(driver, getListAkunFormElement.confirmationPassword, "12345678");
     
-            await scrollToElement(driver, getListAkunFormElement.addAkunButton);
-            await clickElement(driver, getListAkunFormElement.addAkunButton);
+        await scrollToElement(driver, getListAkunFormElement.addAkunButton);
+        await clickElement(driver, getListAkunFormElement.addAkunButton);
     
-            await scrollToElement(driver, getListAkunFormErrorElement.confirmationPasswordError);
-            await assertText(driver, getListAkunFormErrorElement.confirmationPasswordError, "Konfirmasi kata sandi dan kata sandi harus sama.");
-    
-            await delay(2000);
+        await scrollToElement(driver, getListAkunFormErrorElement.confirmationPasswordError);
+        await assertText(driver, getListAkunFormErrorElement.confirmationPasswordError, "Konfirmasi kata sandi dan kata sandi harus sama.");
+
+        await delay(2000);
     });
 
     it('Admin cant store account with empty form', async function() {

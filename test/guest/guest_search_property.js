@@ -1,6 +1,8 @@
 const { Builder, By, Key, until } = require('selenium-webdriver');
 const menuElement = require('../../resource/utils/elements/menuElement');
-const { delay,scrollDown, generateRandomEmail, generateInvalidRandomEmail } = require('../../resource/utils/helper/helper');
+const globalVariable = require('../../resource/utils/helper/globalVariable');
+
+const { delay, scrollDown, assertTitle, uploadFile, assertUrl, clickElement, waitForElementVisible, assertText, enterText, scrollToElement, clearInput, verifyElementExists, verifyTextContains} = require('../../resource/utils/helper/helper');
 
 
 var should = require('chai').should();
@@ -10,6 +12,7 @@ const url = 'http://127.0.0.1:8000/';
 let driver;
 
 const getMenuElement = menuElement();
+const getGlobalVariable = globalVariable();
 
 
 describe('User search property', function() {
@@ -28,55 +31,63 @@ describe('User search property', function() {
 
     afterEach(async function () {
         await driver.get(url); 
-
-        let homeTitle = await driver.getTitle();
-        homeTitle.should.equal("Propertio - Home");
     });
 
-    it('user should can search for property', async function() {
-
-        await driver.findElement(By.xpath(getMenuElement.searchBarXpath)).sendKeys("cijera");
-        await driver.findElement(By.xpath(getMenuElement.searchButtonXpath)).click();
-
+    it('user should can search for property by city', async function() {
+        const addressSearch = `YOGYAKARTA`
+        await scrollToElement(driver, getMenuElement.searchBarXpath);
+        await enterText(driver, getMenuElement.searchBarXpath, addressSearch);
+    
+        await clickElement(driver, getMenuElement.searchButtonXpath);
+    
         await delay(3000);
-        await scrollDown(driver, 2000);
 
-        const propertyTitleElement = await driver.findElement(By.xpath(getMenuElement.propertyTitleXpath));
-        await driver.wait(until.elementIsVisible(propertyTitleElement), 5000);
-        let propertyTitleText = await driver.findElement(By.xpath(getMenuElement.propertyTitleXpath)).getText();
-        propertyTitleText.should.equal("Rumah di Cijera Gempol Sari Ba...");
+        try {
+            const propertyCityElement = await driver.findElement(By.xpath(`//div[@id='property']/div/div/div/p`));
+            await scrollToElement(driver, propertyCityElement);
+            await assertText(driver, propertyCityElement, "KRATON,KOTA YOGYAKARTA,DI YOGYAKARTA");
+
+        } catch (error) {
+            throw new Error(`Property with address ${addressSearch} not found`);
+        }     
+    });
+
+    it('user should can search by title', async function() {
+
+        const titleSearch = `Rumah di Cijera Gempol Sari Ba`
+        await scrollToElement(driver, getMenuElement.searchBarXpath);
+        await enterText(driver, getMenuElement.searchBarXpath, titleSearch);
+    
+        await clickElement(driver, getMenuElement.searchButtonXpath);
+    
+        await delay(3000);
+
+        try {
+            const propertyTitleElement = await driver.findElement(By.xpath(`//h6[@class='list-title']/a[contains(text(), 'Rumah di Cijera Gempol Sari Ba')]`));
+            await scrollToElement(driver, propertyTitleElement);
+            await assertText(driver, propertyTitleElement, titleSearch);
+
+        } catch (error) {
+            throw new Error(`Property with address ${titleSearch} not found`);
+        }     
+        await driver.navigate().refresh();
 
     });
 
     it ('user should can not search not exist property', async function() {
+        try {
+            const titleSearch = `ABCDE`
+            await scrollToElement(driver, getMenuElement.searchBarXpath);
+            await enterText(driver, getMenuElement.searchBarXpath, titleSearch);
         
+            await clickElement(driver, getMenuElement.searchButtonXpath);
+        
+            await delay(3000);
 
-        await driver.findElement(By.xpath(getMenuElement.searchBarXpath)).sendKeys("sleman");
-        await driver.findElement(By.xpath(getMenuElement.searchButtonXpath)).click();
-
-        await delay(3000);
-        await scrollDown(driver, 2000);
-
-        const notFoundElement = await driver.findElement(By.xpath(getMenuElement.notFoundXpath));
-        await driver.wait(until.elementIsVisible(notFoundElement), 5000);
-        let notFoundText = await driver.findElement(By.xpath(getMenuElement.notFoundXpath)).getText();
-        notFoundText.should.equal("Tidak ada properti yang ditemukan.");
+            await scrollToElement(driver, getMenuElement.notFoundXpath);
+            await assertText(driver, getMenuElement.notFoundXpath, `Tidak ada properti yang ditemukan.`);
+        } catch (error) {
+            throw new Error(`Error: Keterangan not found tidak ada, ${error.message}`); 
+        }
     });
-
-    it('user should can search by city', async function() {
-
-
-        await driver.findElement(By.xpath(getMenuElement.searchBarXpath)).sendKeys("KRATON");
-        await driver.findElement(By.xpath(getMenuElement.searchButtonXpath)).click();
-
-        await delay(3000);
-        await scrollDown(driver, 2000);
-
-        const propertyCityElement = await driver.findElement(By.xpath(getMenuElement.propertyCityXpath));
-        await driver.wait(until.elementIsVisible(propertyCityElement), 5000);
-        let propertyCityText = await driver.findElement(By.xpath(getMenuElement.propertyCityXpath)).getText();
-        propertyCityText.should.equal("KRATON,KOTA YOGYAKARTA,DI YOGYAKARTA");
-
-    });
-
 });

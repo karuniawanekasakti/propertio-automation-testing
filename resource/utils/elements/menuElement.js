@@ -1,6 +1,6 @@
 function menuElement() {
     const listingButtonXpath = `//*[@id="mm-8"]/div[1]/div[2]/div/div[1]/div/div[4]/a`;
-    const addPropertyButtonXpath = `//a[@id='add-project-dev']`;
+    const addPropertyButtonXpath = `//a[@id='addPropertyLink']`;
     const propertyElementXpath = `//*[@id="active-card"]/div[1]/div/div`;
     const logoutButtonXpath = `//*[@id="logout-button"]`;
     const userProfileNameXpath = `//*[@id="mm-5"]/div[1]/header/nav/div/div/div[2]/div/div/div/ul/li/div/a/p`;
@@ -29,7 +29,7 @@ function menuElement() {
     const projectSearchXpath = `//*[@id="search-input"]`;
     const projectContainerXpath = `//*[@id="not_active-card"]/div[1]/div/div`;
     const userProjectContainerXpath = `//body[1]/div[1]/div[1]/div[6]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]`;
-    const projectDetailXpath = `//*[@id="not_active-card"]/div[1]/div/div/div[2]/div[3]/div[2]/a[1]`;
+    const projectDetailXpath = `//a[i[@class='fa-solid fa-eye me-2']]`;
     const activeProjectDetailXpath = `//*[@id="active-card"]/div[1]/div/div/div[2]/div[3]/div[2]/a[1]`;
     const activeProjectContainerXpath = `//*[@id="active-card"]/div[1]/div/div`;
     const addUnitProjectXpath = `//*[@id="add-unit-btn"]`;
@@ -58,12 +58,13 @@ function menuElement() {
     const propertyListTitleXpath = `//*[@id="property"]/div/div/div/h6/a[2]`;
     const propertyCityXpath = `//*[@id="property"]/div/div/div/p`;
     const searchButtonXpath = `//*[@id="form-search"]/div/div[2]/div/button`;
-    const notFoundXpath = `//*[@id="property"]/div/div`
+    const notFoundXpath = `//div[@role='alert']`
     const listAkunMenuXpath = `//div[@class='dashboard_sidebar_list']//a[contains(@class,'items-center')][normalize-space()='List Akun']`
     const propertySearch = `//input[@id='search-input']`
     const activePropertyTab = `//button[@id='pills-active-tab']`
     const activePropertyContainer = `//span[@id='active-card']`
     const paginationProperty = `//div[@id='pills-active']//p[@class='mt10 pagination_page_count text-center']`
+    const notActiveProjectTab = `//button[@id='pills-not_active-tab']`
 
     return {
         listingButtonXpath,
@@ -132,7 +133,8 @@ function menuElement() {
         propertySearch,
         activePropertyTab,
         activePropertyContainer,
-        paginationProperty  
+        paginationProperty,
+        notActiveProjectTab
 
         
     };

@@ -77,31 +77,39 @@ describe('Agent change status property', function() {
     });
 
     it ('Agent should can change status of property to draft', async function() {
+        try {
+            await clickElement(driver, getMenuElement.optionPropertyDropdownXpath);
     
-        await clickElement(driver, getMenuElement.optionPropertyDropdownXpath);
+            await clickElement(driver, getMenuElement.draftOptionItemXpath);
     
-        await clickElement(driver, getMenuElement.draftOptionItemXpath);
-
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Status properti anda berhasil diperbarui!");
-    
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Status properti anda berhasil diperbarui!");
+        
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        } catch (error) {
+            throw new Error(`Error : Change status error, ${error.message}`); 
+        }
     });
 
     it ('Agent should can found changed property status in another tab', async function() {
-        await scrollToElement(driver, getMenuElement.iklanDraftTabXpath);
+        try {
+            await scrollToElement(driver, getMenuElement.iklanDraftTabXpath);
     
-        await clickElement(driver, getMenuElement.iklanDraftTabXpath);
+            await clickElement(driver, getMenuElement.iklanDraftTabXpath);
+        
+            await enterText(driver, getMenuElement.propertySearchXpath, "Kalibiru");
+            await delay(2000);
+            await enterText(driver, getMenuElement.propertySearchXpath, Key.ENTER);
+        
+            await delay(2000);
     
-        await enterText(driver, getMenuElement.propertySearchXpath, "Kalibiru");
-        await delay(2000);
-        await enterText(driver, getMenuElement.propertySearchXpath, Key.ENTER);
+            await verifyElementExists(driver, getMenuElement.propertyElementXpath);
     
-        await delay(2000);
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Bug : Updated propery not found, ${error.message}`); 
+        }
 
-        await verifyElementExists(driver, getMenuElement.propertyElementXpath);
-
-        await delay(3000);
     });
 
     it ('Validate property status in another tab', async function() {

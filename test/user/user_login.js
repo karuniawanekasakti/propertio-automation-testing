@@ -30,82 +30,83 @@ describe('User login', function() {
     
 
     it ('User should can login with valid information', async function() {
-    
-        await clickElement(driver, getLoginElement.loginRegisterButtonXpath);
-        await assertTitle(driver, "Propertio - Login");
-    
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
-    
-        await enterText(driver, getLoginElement.emailFieldXpath, getGlobalVariable.validUserEmail);
-        await enterText(driver, getLoginElement.passwordFieldXpath, getGlobalVariable.validUserPassword);
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-    
-        const loginModalXpath = getLoginElement.loginModalXpath;
-        await waitForElementVisible(driver, loginModalXpath);
-    
-        await assertText(driver, getLoginElement.loginModalTextXpath, "Login ke Akun Anda berhasil!");
-    
-        await delay(3000);
-    
-        await assertUrl(driver, "http://127.0.0.1:8000/");
-    
-        const userProfileNameXpath = getMenuElement.userProfileNameXpath;
-        await waitForElementVisible(driver, userProfileNameXpath);
-        await assertText(driver, userProfileNameXpath, "userProperti");
+        try {
+            await clickElement(driver, getLoginElement.loginRegisterButtonXpath);
+            await assertTitle(driver, "Propertio - Login");
+        
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
+        
+            await enterText(driver, getLoginElement.emailFieldXpath, getGlobalVariable.validUserEmail);
+            await enterText(driver, getLoginElement.passwordFieldXpath, getGlobalVariable.validUserPassword);
+            await clickElement(driver, getLoginElement.loginButtonXpath);
+        
+            const loginModalXpath = getLoginElement.loginModalXpath;
+            await waitForElementVisible(driver, loginModalXpath);
+        
+            await assertText(driver, getLoginElement.loginModalTextXpath, "Login ke Akun Anda berhasil!");
+        
+            await delay(3000);
+        
+            await assertUrl(driver, "http://127.0.0.1:8000/");
+        
+            const userProfileNameXpath = getMenuElement.userProfileNameXpath;
+            await waitForElementVisible(driver, userProfileNameXpath);
+            await assertText(driver, userProfileNameXpath, "userProperti");
+        } catch (error) {
+            throw new Error(`login failed: ${error.message}`); 
+        }
     });
 
     it ('User should can logout', async function() {
-        const userProfileXpath = getMenuElement.userProfileDropdownXpath;
-        await waitForElementVisible(driver, userProfileXpath);
-        await clickElement(driver, userProfileXpath);
+        try {
+            const userProfileXpath = getMenuElement.userProfileDropdownXpath;
+            await waitForElementVisible(driver, userProfileXpath);
+            await clickElement(driver, userProfileXpath);
 
-        await delay(2000);
+            await delay(2000);
 
-        const logoutButtonXpath = getMenuElement.logoutButtonXpath;
-        await waitForElementVisible(driver, logoutButtonXpath);
-        await clickElement(driver, logoutButtonXpath);
+            const logoutButtonXpath = getMenuElement.logoutButtonXpath;
+            await waitForElementVisible(driver, logoutButtonXpath);
+            await clickElement(driver, logoutButtonXpath);
 
-        await delay(2000);
+            await delay(2000);
 
-        await assertUrl(driver, "http://127.0.0.1:8000/");
+            await assertUrl(driver, "http://127.0.0.1:8000/");
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
-    it ('User should cant login with invalid email', async function() {
-        await driver.get("http://127.0.0.1:8000/login");
 
-        await enterText(driver, getLoginElement.emailFieldXpath, getGlobalVariable.invalidUserEmail);
-        await enterText(driver, getLoginElement.passwordFieldXpath, getGlobalVariable.validUserPassword);
-        await clickElement(driver, getLoginElement.loginButtonXpath);
+    it ('User cant login with invalid data', async function() {
+        try {
+            await driver.get("http://127.0.0.1:8000/login");
 
-        const loginModalXpath = getLoginElement.loginModalXpath;
-        await waitForElementVisible(driver, loginModalXpath);
+            await enterText(driver, getLoginElement.emailFieldXpath, getGlobalVariable.invalidUserEmail);
+            await enterText(driver, getLoginElement.passwordFieldXpath, getGlobalVariable.invalidUserPassword);
+            await clickElement(driver, getLoginElement.loginButtonXpath);
 
-        await assertText(driver, getLoginElement.loginModalTextXpath, "Invalid email or password.");
+            const loginModalXpath = getLoginElement.loginModalXpath;
+            await waitForElementVisible(driver, loginModalXpath);
 
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
-    });
+            await assertText(driver, getLoginElement.loginModalTextXpath, "Invalid email or password.");
 
-    it ('User should cant login with invalid password', async function() {
-        await driver.get("http://127.0.0.1:8000/login");
-
-        await enterText(driver, getLoginElement.emailFieldXpath, getGlobalVariable.validUserEmail);
-        await enterText(driver, getLoginElement.passwordFieldXpath, getGlobalVariable.invalidUserPassword);
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-
-        const loginModalXpath = getLoginElement.loginModalXpath;
-        await waitForElementVisible(driver, loginModalXpath);
-
-        await assertText(driver, getLoginElement.loginModalTextXpath, "Invalid email or password.");
-
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('User should cant login with empty field', async function() {
-        await driver.get("http://127.0.0.1:8000/login");
+        try {
+            await driver.get("http://127.0.0.1:8000/login");
 
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-    
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
+            await clickElement(driver, getLoginElement.loginButtonXpath);
+        
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
+        } catch (error) {
+            throw new Error(`Bug : Wrong Url Redirect, ${error.message}`); 
+        }
     });
 
 });

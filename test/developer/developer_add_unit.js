@@ -4,6 +4,8 @@ const menuElement = require('../../resource/utils/elements/menuElement');
 const popUpElement = require('../../resource/utils/elements/popUpElement');
 const unitInformasiFormElement = require('../../resource/utils/elements/unitInformasiFormElement');
 const unitMediaFormElement = require('../../resource/utils/elements/unitMediaFormElement');
+const projectMediaFormElement = require('../../resource/utils/elements/projectMediaFormElement');
+const unitInformasiErrorElement = require('../../resource/utils/elements/unitInformasiErrorElement');
 const globalVariable = require('../../resource/utils/helper/globalVariable');
 
 const { delay, scrollDown, assertTitle, uploadFile, assertUrl, clickElement, waitForElementVisible, assertText, enterText, scrollToElement, clearInput, verifyElementExists} = require('../../resource/utils/helper/helper');
@@ -18,11 +20,11 @@ const getLoginElement = loginElement();
 const getMenuElement = menuElement();
 const getPopUpElement = popUpElement();
 const getUnitInformasiFormElement = unitInformasiFormElement();
+const getProjectMediaFormElement = projectMediaFormElement();
+const getGlobalVariable = globalVariable();
 const getUnitMediaFormElement = unitMediaFormElement();
+const getUnitInformasiErrorElement = unitInformasiErrorElement();
 
-const uniqueName = generateUniqueName(5);
-
-const newUnitTitle = `Unit ${uniqueName}`;
 
 describe ('Developer Add Unit', function() {
 
@@ -35,7 +37,7 @@ describe ('Developer Add Unit', function() {
     });
     
     after (async function () {
-        // await driver.quit();
+        await driver.quit();
     });
 
 
@@ -69,196 +71,195 @@ describe ('Developer Add Unit', function() {
         await delay(3000);
     });
 
-    // it ('Developer should can see draft project detail', async function () {
 
-    //     await scrollDown(driver, 500);
+    it('Developer should be able to view details of an active project', async function () {
 
-    //     await driver.findElement(By.xpath(getMenuElement.draftProjectTabXpath)).click();
+        await scrollToElement(driver, getMenuElement.propertySearchXpath);
+        await enterText(driver, getMenuElement.propertySearchXpath, "testing");
+    
+        await enterText(driver, getMenuElement.propertySearchXpath, Key.ENTER);
 
-    //     await driver.findElement(By.xpath(getMenuElement.projectSearchXpath)).sendKeys("Perumahan");
+        try {
+            await delay(2000);
+            await clickElement(driver, getMenuElement.activeProjectDetailXpath);
+            await delay(3000);
+        } catch (error) {
+            if (error.name === "NoSuchElementError") {
+                await clickElement(driver, getMenuElement.notActiveProjectTab);
+                await delay(3000);
+            }
+        }
 
-    //     await delay(2000);
+        await scrollToElement(driver, getMenuElement.projectDetailXpath);
+        await clickElement(driver, getMenuElement.projectDetailXpath);
+    });
 
-    //     const projectContainer = await driver.findElement(By.xpath(getMenuElement.projectContainerXpath));
-    //     should.exist(projectContainer);
-
-    //     await driver.findElement(By.xpath(getMenuElement.projectDetailXpath)).click();
-
-    //     await delay(3000);
-
-    //     const addUnit = await driver.findElement(By.xpath(getMenuElement.addUnitProjectXpath));
-    //     await scrollIntoView(driver, addUnit);
-
-    //     await addUnit.click();
-
-    // });
-
-    it ('Developer should can see active project detail', async function () {
-
-        await scrollDown(driver, 500);
-
-        await driver.findElement(By.xpath(getMenuElement.projectSearchXpath)).sendKeys("Perumahan", Key.ENTER);
-
-        await delay(2000);
-
-        const projectContainer = await driver.findElement(By.xpath(getMenuElement.activeProjectContainerXpath));
-        should.exist(projectContainer);
-
-        await driver.findElement(By.xpath(getMenuElement.activeProjectDetailXpath)).click();
+    it ('Validate unit informasi empty form', async function () {
+        const errors = [];
+        async function checkError(element, expectedText) {
+            try {
+                await scrollToElement(driver, element);
+                await assertText(driver, element, expectedText);
+            } catch (e) {
+                errors.push(e.message);
+            }
+        }
+        await scrollToElement(driver, getUnitInformasiFormElement.submitUnitButton);
+        await clickElement(driver, getUnitInformasiFormElement.submitUnitButton);
 
         await delay(3000);
 
-        // const unitContainer = await driver.findElement(By.xpath(getMenuElement.unitContainerXpath));
-        // await scrollIntoView(driver, unitContainer);
-        // should.exist(unitContainer);
-        await scrollDown(driver, 1400);
-
-        const addUnit = await driver.findElement(By.xpath(getMenuElement.addUnitProjectXpath));
-        await addUnit.click();
-
+        await checkError(getUnitInformasiErrorElement.titleError, "Judul wajib diisi.");
+        await checkError(getUnitInformasiErrorElement.hargaError, "Harga wajib diisi.");
     });
 
     it ('Developer should can fill informasi unit', async function () {
+        try {
+            await delay(3000);
 
-        const name = await driver.findElement(By.xpath(getUnitInformasiFormElement.name));
-        await driver.wait(until.elementIsVisible(name), 5000);
-        await name.sendKeys(newUnitTitle);
+        await scrollToElement(driver, getMenuElement.addUnitProjectXpath);
+        await clickElement(driver, getMenuElement.addUnitProjectXpath);
 
-        const deskripsi = await driver.findElement(By.xpath(getUnitInformasiFormElement.deskripsi));
-        await driver.wait(until.elementIsVisible(deskripsi), 5000);
-        await deskripsi.sendKeys("Unit 1 adalah unit yang paling dekat dengan fasilitas umum");
+        await enterText(driver, getUnitInformasiFormElement.name, getGlobalVariable.newUnitTitle);
 
-        const harga = await driver.findElement(By.xpath(getUnitInformasiFormElement.harga));
-        await driver.wait(until.elementIsVisible(harga), 5000);
-        await harga.sendKeys("200000000");
+        await enterText(driver, getUnitInformasiFormElement.deskripsi, "Unit 1 adalah unit yang paling dekat dengan fasilitas umum");
 
-        const stokUnit = await driver.findElement(By.xpath(getUnitInformasiFormElement.stokUnit));
-        await driver.wait(until.elementIsVisible(stokUnit), 5000);
-        await stokUnit.sendKeys("10");
+        await enterText(driver, getUnitInformasiFormElement.harga, "200000000");
 
-        const luasTanah = await driver.findElement(By.xpath(getUnitInformasiFormElement.luasTanah));
-        await driver.wait(until.elementIsVisible(luasTanah), 5000);
-        await luasTanah.sendKeys("100");
+        await enterText(driver, getUnitInformasiFormElement.stokUnit, "10");
 
-        const luasBangunan = await driver.findElement(By.xpath(getUnitInformasiFormElement.luasBangunan));
-        await driver.wait(until.elementIsVisible(luasBangunan), 5000);
-        await luasBangunan.sendKeys("80");
+        await enterText(driver, getUnitInformasiFormElement.luasTanah, "100");
 
-        const jumlahLantai = await driver.findElement(By.xpath(getUnitInformasiFormElement.floor));
-        await driver.wait(until.elementIsVisible(jumlahLantai), 5000);
-        await jumlahLantai.sendKeys("2");
+        await enterText(driver, getUnitInformasiFormElement.luasBangunan, "80");
 
-        const kamar = await driver.findElement(By.xpath(getUnitInformasiFormElement.kamar));
-        await driver.wait(until.elementIsVisible(kamar), 5000);
-        await kamar.sendKeys("2");
+        await enterText(driver, getUnitInformasiFormElement.floor, "2");
 
-        const kamarMandi = await driver.findElement(By.xpath(getUnitInformasiFormElement.kamarMandi));
-        await driver.wait(until.elementIsVisible(kamarMandi), 5000);
-        await kamarMandi.sendKeys("1");
+        await enterText(driver, getUnitInformasiFormElement.kamar, "2")
 
-        const tempatParkirDropDown = await driver.findElement(By.xpath(getUnitInformasiFormElement.tempatParkirDropDown))
-        await driver.wait(until.elementIsVisible(tempatParkirDropDown), 5000);
-        await tempatParkirDropDown.click();
+        await enterText(driver, getUnitInformasiFormElement.kamarMandi, "1");
 
-        const tempatParkirDropDownItem = await driver.findElement(By.xpath(getUnitInformasiFormElement.tempatParkirDropDownItem));
-        await driver.wait(until.elementIsVisible(tempatParkirDropDownItem), 5000);
-        await tempatParkirDropDownItem.click();
+        await clickElement(driver, getUnitInformasiFormElement.tempatParkirDropDown)
+        await waitForElementVisible(driver, getUnitInformasiFormElement.tempatParkirDropDownItem)
+        await clickElement(driver, getUnitInformasiFormElement.tempatParkirDropDownItem)
 
-        const dayaListrikDropDown = await driver.findElement(By.xpath(getUnitInformasiFormElement.dayaListrikDropDown));
-        await driver.wait(until.elementIsVisible(dayaListrikDropDown), 5000);
-        await dayaListrikDropDown.click();
+        await clickElement(driver, getUnitInformasiFormElement.dayaListrikDropDown)
+        await waitForElementVisible(driver, getUnitInformasiFormElement.dayaListrikDropDownItem)
+        await clickElement(driver, getUnitInformasiFormElement.dayaListrikDropDownItem)
 
-        const dayaListrikDropDownItem = await driver.findElement(By.xpath(getUnitInformasiFormElement.dayaListrikDropDownItem));
-        await driver.wait(until.elementIsVisible(dayaListrikDropDownItem), 5000);
-        await dayaListrikDropDownItem.click();
+        await clickElement(driver, getUnitInformasiFormElement.jenisAirDropDown)
+        await waitForElementVisible(driver, getUnitInformasiFormElement.jenisAirDropDownItem)
+        await clickElement(driver, getUnitInformasiFormElement.jenisAirDropDownItem)
 
-        const jenisAirDropDown = await driver.findElement(By.xpath(getUnitInformasiFormElement.jenisAirDropDown));
-        await driver.wait(until.elementIsVisible(jenisAirDropDown), 5000);
-        await jenisAirDropDown.click();
+        await clickElement(driver, getUnitInformasiFormElement.interiorDropDown)
+        await waitForElementVisible(driver, getUnitInformasiFormElement.interiorDropDownItem)
+        await clickElement(driver, getUnitInformasiFormElement.interiorDropDownItem)
 
-        const jenisAirDropDownItem = await driver.findElement(By.xpath(getUnitInformasiFormElement.jenisAirDropDownItem));
-        await driver.wait(until.elementIsVisible(jenisAirDropDownItem), 5000);
-        await jenisAirDropDownItem.click();
 
-        const interiorDropDown = await driver.findElement(By.xpath(getUnitInformasiFormElement.interiorDropDown));
-        await driver.wait(until.elementIsVisible(interiorDropDown), 5000);
-        await interiorDropDown.click();
+        await clickElement(driver, getUnitInformasiFormElement.aksesJalanDropDown)
+        await waitForElementVisible(driver, getUnitInformasiFormElement.aksesJalanDropDownItem)
+        await clickElement(driver, getUnitInformasiFormElement.aksesJalanDropDownItem)
 
-        const interiorDropDownItem = await driver.findElement(By.xpath(getUnitInformasiFormElement.interiorDropDownItem));
-        await driver.wait(until.elementIsVisible(interiorDropDownItem), 5000);
-        await interiorDropDownItem.click();
-
-        const aksesJalanDropDown = await driver.findElement(By.xpath(getUnitInformasiFormElement.aksesJalanDropDown));
-        await driver.wait(until.elementIsVisible(aksesJalanDropDown), 5000);
-        await aksesJalanDropDown.click();
-
-        const aksesJalanDropDownItem = await driver.findElement(By.xpath(getUnitInformasiFormElement.aksesJalanDropDownItem));
-        await driver.wait(until.elementIsVisible(aksesJalanDropDownItem), 5000);
-        await aksesJalanDropDownItem.click();
-
-        const submitUnitButton = await driver.findElement(By.xpath(getUnitInformasiFormElement.submitUnitButton));
-        await scrollIntoView(driver, submitUnitButton);
-        await submitUnitButton.click();
+        await scrollToElement(driver, getUnitInformasiFormElement.submitUnitButton);
+        await clickElement(driver, getUnitInformasiFormElement.submitUnitButton);
 
         await delay(3000);
 
-        const popUpText = await driver.findElement(By.xpath(getPopUpElement.projectLocatonFormTextPopUp)).getText();
-        popUpText.should.equal("Data Berhasil Disimpan!");
-
-        await driver.findElement(By.xpath(getPopUpElement.projectLocationFormSubmitPopUp)).click();
+        await waitForElementVisible(driver, getPopUpElement.popUpText);
+        await assertText(driver, getPopUpElement.popUpText, "Data Berhasil Disimpan!");
+        await clickElement(driver, getPopUpElement.popUpConfirm);
 
         await delay(3000);
+        } catch (error) {
+            throw new Error(`Error: Fill informasi form failed, ${error.message}`); 
+        }
 
     });
 
-    it ('Developer should can fill media unit', async function () {
+    it ('Developer cant submit empty property image', async function() {
+        await scrollToElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
+        await clickElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
 
-        const foto = await driver.findElement(By.xpath(getUnitMediaFormElement.foto));
-        await scrollIntoView(driver, foto);
-        foto.sendKeys("E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\properti\\properti_1.jpg");
-
-        await scrollDown(driver, 500);
-        await driver.findElement(By.xpath(getUnitMediaFormElement.fotoSubmitButton)).click();
-
-        await delay(3000);
-
-        const popUpText = await driver.findElement(By.xpath(getPopUpElement.projectLocatonFormTextPopUp)).getText();
-        popUpText.should.equal("Foto unit berhasil ditambahkan!");
+        try {
+            await waitForElementVisible(driver, getUnitInformasiErrorElement.photoError);
+            await scrollToElement(driver, getUnitInformasiErrorElement.photoError);
+            await assertText(driver, getUnitInformasiErrorElement.photoError, "Foto wajib diisi.");
+        }catch (error) {
+            throw new Error('Error Text not found');
+        }
 
         await delay(3000);
+        await driver.navigate().refresh();
+    })
 
-        await driver.findElement(By.xpath(getPopUpElement.unitMediaFormOkButtonXpath)).click();    
+    it ('Valiate Video and Virtual tour field', async function() {
+        try {
+            await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
+            await enterText(driver, getProjectMediaFormElement.linkVideo, "qwertyuiop");
+
+            await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
+            await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah Mewah");
+
+            await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+
+            await delay(2000);
+
+            await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
+            await verifyElementExists(driver, getUnitInformasiErrorElement.videoError);
+
+            await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
+            await verifyElementExists(driver, getUnitInformasiErrorElement.virtualTourError);
+
+            await assertText(driver, getUnitInformasiErrorElement.videoError, "Format link video tidak valid.");
+            await assertText(driver, getUnitInformasiErrorElement.virtualTourError, "There is empty input. Please fill the empty input.");
+
+            await driver.navigate().refresh();
+        } catch (error) {
+            throw new Error(`Error: Tidak ada keterangan error , ${error.message}`); 
+        }
         
-        await delay(3000);
+    })
 
-        const linkVideo = await driver.findElement(By.xpath(getUnitMediaFormElement.linkVideo));
-        await linkVideo.sendKeys("https://www.youtube.com/watch?v=PKyn_Msy9Bc");
+    it ('Developer should can fill media unit', async function () {
+        try {
+            const fileInputXpath = getProjectMediaFormElement.gambarPropertiUpload;
+            await scrollToElement(driver, fileInputXpath);
+            await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
 
-        const virtualTour = await driver.findElement(By.xpath(getUnitMediaFormElement.virtualTour));
-        await virtualTour.sendKeys("Virtual Tour Unit 1");
+            await scrollToElement(driver, getUnitMediaFormElement.fotoSubmitButton);
+            await clickElement(driver, getUnitMediaFormElement.fotoSubmitButton);
 
-        const linkVirtualTour = await driver.findElement(By.xpath(getUnitMediaFormElement.linkVirtualTour));
-        await linkVirtualTour.sendKeys("https://www.google.com");
+            await delay(3000);
+        
+            const sitePlanUploadPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, sitePlanUploadPopUpXpath);
+            await assertText(driver, getPopUpElement.popUpText, "Foto unit berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
 
-        const dokumen = await driver.findElement(By.xpath(getUnitMediaFormElement.dokumen));
-        dokumen.sendKeys("E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\properti\\Modul Manual Testing (2).pdf");
+            await enterText(driver, getProjectMediaFormElement.linkVideo, "https://www.youtube.com/watch?v=9bZkp7q19f0");
+        
+            await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah Mewah");
+        
+            await enterText(driver, getProjectMediaFormElement.virtualTourLink, "https://www.google.com/maps");
+        
+            await scrollToElement(driver, getProjectMediaFormElement.documentButton);
+            await driver.findElement(By.xpath(getProjectMediaFormElement.documentUpload)).sendKeys(getGlobalVariable.proyekDocument);
+            
+            await delay(3000);
 
-        const rilisUnit = await driver.findElement(By.xpath(getUnitMediaFormElement.rilisUnit));
-        await scrollIntoView(driver, rilisUnit);
-        await driver.findElement(By.xpath(getUnitMediaFormElement.rilisUnit)).click();
+            await scrollToElement(driver, getUnitMediaFormElement.rilisUnit);
+            await clickElement(driver, getUnitMediaFormElement.rilisUnit);
 
-        await delay(3000);
+            const mediaPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, mediaPopUpXpath);
+            await assertText(driver, getPopUpElement.mediaPopUpTextXpath, "Seluruh data media berhasil disimpan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        const popUpText2 = await driver.findElement(By.xpath(getPopUpElement.projectLocatonFormTextPopUp)).getText();
-        popUpText2.should.equal("Seluruh data media berhasil disimpan!");
-
-        await driver.findElement(By.xpath(getPopUpElement.projectLocationFormSubmitPopUp)).click();
-
-        await delay(3000);
-
-        const unitContainer = await driver.findElement(By.xpath(getMenuElement.unitContainerXpath));
-        await scrollIntoView(driver, unitContainer);
-        should.exist(unitContainer);
-
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Error: Fill media form failed , ${error.message}`); 
+        }
+        
     });
 });

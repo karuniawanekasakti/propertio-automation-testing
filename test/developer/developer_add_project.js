@@ -44,7 +44,7 @@ describe ('Developer add project', function() {
     });
     
     after (async function () {
-        // await driver.quit();
+        await driver.quit();
     });
 
     it('developer should be able to login', async function() {
@@ -95,10 +95,10 @@ describe ('Developer add project', function() {
         }
 
         await checkError(getProjectFormErrorElement.headlineErrorXpath, "Berita utama wajib diisi.");
-        await checkError(getProjectFormErrorElement.titleErrorXpath, "Nama proyek harus diisi");
-        await checkError(getProjectFormErrorElement.provinceErrorXpath, "Provinsi harus diisi");
-        await checkError(getProjectFormErrorElement.cityErrorXpath, "Kota harus diisi");
-        await checkError(getProjectFormErrorElement.districtErrorXpath, "Kecamatan harus diisi");
+        await checkError(getProjectFormErrorElement.titleErrorXpath, "Judul wajib diisi.");
+        await checkError(getProjectFormErrorElement.provinceErrorXpath, "Provinsi harus diisi.");
+        await checkError(getProjectFormErrorElement.cityErrorXpath, "Kota harus diisi.");
+        await checkError(getProjectFormErrorElement.districtErrorXpath, "Kecamatan harus diisi.");
         await checkError(getProjectFormErrorElement.latitudeErrorXpath, "Latitude wajib diisi.");
         await checkError(getProjectFormErrorElement.langitudeErrorXpath, "Longitude wajib diisi.");
 
@@ -112,58 +112,62 @@ describe ('Developer add project', function() {
     
 
     it('Developer should can fill location form', async function () {
-        await enterText(driver, getProjectLocationFormElement.headline, newProjectHeadline);
+        try {
+            await enterText(driver, getProjectLocationFormElement.headline, newProjectHeadline);
     
-        await enterText(driver, getProjectLocationFormElement.tahunProject, "2012");
-    
-        await enterText(driver, getProjectLocationFormElement.title, newProjectTitle);
-    
-        await clickElement(driver, getProjectLocationFormElement.tipePropertiDropDown);
-        await clickElement(driver, getProjectLocationFormElement.tipePropertiDropDownItem);
-    
-        await clickElement(driver, getProjectLocationFormElement.sertifikatDropDown);
-        await clickElement(driver, getProjectLocationFormElement.sertifikatDropDownItem);
-    
-        await enterText(driver, getProjectLocationFormElement.deskripsi, "Rumah mewah di Jakarta Selatan dengan fasilitas lengkap");
-    
-        await enterText(driver, getProjectLocationFormElement.alamat, getGlobalVariable.propertyAddress);
-    
-        await clickElement(driver, getProjectLocationFormElement.provinceDropDown);
-        await waitForElementVisible(driver, getProjectLocationFormElement.provinceDropDownItem);
-        await clickElement(driver, getProjectLocationFormElement.provinceDropDownItem);
-    
-        await clickElement(driver, getProjectLocationFormElement.kotaDropDown);
-        await waitForElementVisible(driver, getProjectLocationFormElement.kotaDropDownItem);
-        await clickElement(driver, getProjectLocationFormElement.kotaDropDownItem);
-    
-        await clickElement(driver, getProjectLocationFormElement.kecamatanDropDown);
-        await waitForElementVisible(driver, getProjectLocationFormElement.kecamatanDropDownItem);
-        await clickElement(driver, getProjectLocationFormElement.kecamatanDropDownItem);
-    
-        await enterText(driver, getProjectLocationFormElement.kodePos, "12345");
-    
-        await enterText(driver, getProjectLocationFormElement.mapXpath, "Jl. Citra Kalibiru No. 1, Jakarta Utara");
-        await delay(5000);
-
-        const mapInput = await driver.findElement(By.xpath(getProjectLocationFormElement.mapXpath));
-        await mapInput.sendKeys(Key.ARROW_DOWN, Key.ENTER);
-    
-        await scrollToElement(driver, getProjectLocationFormElement.sitePlanUpload);
-
-        const fileInputXpath = getProjectLocationFormElement.sitePlanUpload;
-        await scrollToElement(driver, fileInputXpath);
-        await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
+            await enterText(driver, getProjectLocationFormElement.tahunProject, "2012");
         
-        await scrollToElement(driver, getProjectLocationFormElement.submitButton);
-        await clickElement(driver, getProjectLocationFormElement.submitButton);
-        await delay(3000);
-    
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Data Berhasil Disimpan!");
-    
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+            await enterText(driver, getProjectLocationFormElement.title, newProjectTitle);
+        
+            await clickElement(driver, getProjectLocationFormElement.tipePropertiDropDown);
+            await clickElement(driver, getProjectLocationFormElement.tipePropertiDropDownItem);
+        
+            await clickElement(driver, getProjectLocationFormElement.sertifikatDropDown);
+            await clickElement(driver, getProjectLocationFormElement.sertifikatDropDownItem);
+        
+            await enterText(driver, getProjectLocationFormElement.deskripsi, "Rumah mewah di Jakarta Selatan dengan fasilitas lengkap");
+        
+            await enterText(driver, getProjectLocationFormElement.alamat, getGlobalVariable.propertyAddress);
+        
+            await clickElement(driver, getProjectLocationFormElement.provinceDropDown);
+            await waitForElementVisible(driver, getProjectLocationFormElement.provinceDropDownItem);
+            await clickElement(driver, getProjectLocationFormElement.provinceDropDownItem);
+        
+            await clickElement(driver, getProjectLocationFormElement.kotaDropDown);
+            await waitForElementVisible(driver, getProjectLocationFormElement.kotaDropDownItem);
+            await clickElement(driver, getProjectLocationFormElement.kotaDropDownItem);
+        
+            await clickElement(driver, getProjectLocationFormElement.kecamatanDropDown);
+            await waitForElementVisible(driver, getProjectLocationFormElement.kecamatanDropDownItem);
+            await clickElement(driver, getProjectLocationFormElement.kecamatanDropDownItem);
+        
+            await enterText(driver, getProjectLocationFormElement.kodePos, "12345");
+        
+            await enterText(driver, getProjectLocationFormElement.mapXpath, "Jl. Citra Kalibiru No. 1, Jakarta Utara");
+            await delay(5000);
+
+            const mapInput = await driver.findElement(By.xpath(getProjectLocationFormElement.mapXpath));
+            await mapInput.sendKeys(Key.ARROW_DOWN, Key.ENTER);
+        
+            await scrollToElement(driver, getProjectLocationFormElement.sitePlanUpload);
+
+            const fileInputXpath = getProjectLocationFormElement.sitePlanUpload;
+            await scrollToElement(driver, fileInputXpath);
+            await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
+            
+            await scrollToElement(driver, getProjectLocationFormElement.submitButton);
+            await clickElement(driver, getProjectLocationFormElement.submitButton);
+            await delay(3000);
+        
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Data Berhasil Disimpan!");
+        
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Error : fill location failed, ${error.message}`); 
+        }
     });
 
     it ('Developer cant submit empty property image', async function() {
@@ -183,106 +187,126 @@ describe ('Developer add project', function() {
     })
 
     it ('Validate Virtual tour field', async function() {
-        await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
-        await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah");
+        try {
+            await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
+            await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah");
 
-        await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
-        await clickElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+            await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+            await clickElement(driver, getProjectMediaFormElement.mediaFormSubmit);
 
-        await delay(2000);
+            await delay(2000);
 
-        await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
-        await verifyElementExists(driver, getProjectFormErrorElement.virtualTourError);
+            await scrollToElement(driver, getProjectMediaFormElement.virtualTourName);
+            await verifyElementExists(driver, getProjectFormErrorElement.virtualTourError);
 
-        await assertText(driver, getProjectFormErrorElement.virtualTourError, "There is empty input. Please fill the empty input.");
+            await assertText(driver, getProjectFormErrorElement.virtualTourError, "There is empty input. Please fill the empty input.");
+            
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Bug: Keterangan error tidak muncul, ${error.message}`); 
+        }
         
-        await delay(3000);
     })
 
     it ('Valiate Video Link field', async function() {
-        await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
-        await enterText(driver, getProjectMediaFormElement.linkVideo, "qwertyuiop");
+        try {
+            await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
+            await enterText(driver, getProjectMediaFormElement.linkVideo, "qwertyuiop");
 
-        await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+            await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
 
-        await delay(2000);
+            await delay(2000);
 
-        await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
-        await verifyElementExists(driver, getProjectFormErrorElement.videoError);
+            await scrollToElement(driver, getProjectMediaFormElement.linkVideo);
+            await verifyElementExists(driver, getProjectFormErrorElement.videoError);
 
-        await assertText(driver, getProjectFormErrorElement.videoError, "Format link video tidak valid.");
+            await assertText(driver, getProjectFormErrorElement.videoError, "Format link video tidak valid.");
 
-        await driver.navigate().refresh();
-
+            await driver.navigate().refresh();
+        } catch (error) {
+            throw new Error(`Error: Keterangan error tidak muncul, ${error.message}`); 
+        }
+        
     })
 
     it('Developer should can fill media form', async function () {
     
-        const fileInputXpath = getProjectMediaFormElement.gambarPropertiUpload;
-        await scrollToElement(driver, fileInputXpath);
-        await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
+        try {
+            const fileInputXpath = getProjectMediaFormElement.gambarPropertiUpload;
+            await scrollToElement(driver, fileInputXpath);
+            await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
 
-        await scrollToElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
-        await clickElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
+            await scrollToElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
+            await clickElement(driver, getProjectMediaFormElement.gambarPropertiSubmit);
 
-        await delay(3000);
-    
-        const sitePlanUploadPopUpXpath = getPopUpElement.popUpText;
-        await waitForElementVisible(driver, sitePlanUploadPopUpXpath);
-        await assertText(driver, getPopUpElement.popUpText, "Foto proyek berhasil ditambahkan!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+            await delay(3000);
+        
+            const sitePlanUploadPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, sitePlanUploadPopUpXpath);
+            await assertText(driver, getPopUpElement.popUpText, "Foto proyek berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
 
-        await enterText(driver, getProjectMediaFormElement.linkVideo, "https://www.youtube.com/watch?v=9bZkp7q19f0");
-    
-        await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah Mewah");
-    
-        await enterText(driver, getProjectMediaFormElement.virtualTourLink, "https://www.google.com/maps");
-    
-        await scrollToElement(driver, getProjectMediaFormElement.documentButton);
-        await driver.findElement(By.xpath(getProjectMediaFormElement.documentUpload)).sendKeys(getGlobalVariable.proyekDocument);
-    
-        await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
-        await clickElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+            await enterText(driver, getProjectMediaFormElement.linkVideo, "https://www.youtube.com/watch?v=9bZkp7q19f0");
+        
+            await enterText(driver, getProjectMediaFormElement.virtualTourName, "Virtual Tour Rumah Mewah");
+        
+            await enterText(driver, getProjectMediaFormElement.virtualTourLink, "https://www.google.com/maps");
+        
+            await scrollToElement(driver, getProjectMediaFormElement.documentButton);
+            await driver.findElement(By.xpath(getProjectMediaFormElement.documentUpload)).sendKeys(getGlobalVariable.proyekDocument);
+        
+            await scrollToElement(driver, getProjectMediaFormElement.mediaFormSubmit);
+            await clickElement(driver, getProjectMediaFormElement.mediaFormSubmit);
 
-        const mediaPopUpXpath = getPopUpElement.popUpText;
-        await waitForElementVisible(driver, mediaPopUpXpath);
-        await assertText(driver, getPopUpElement.mediaPopUpTextXpath, "Seluruh data media berhasil ditambahkan!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+            const mediaPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, mediaPopUpXpath);
+            await assertText(driver, getPopUpElement.mediaPopUpTextXpath, "Seluruh data media berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        await delay(3000);
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Error: Pengisian media failed, ${error.message}`); 
+        }
+        
     });
 
     it ('Agent should not be able to fill facility form with empty fields', async function() {
-
-        await scrollToElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
-        await clickElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
-
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Fasilitas properti perlu diisi minimal 1 (satu)!");
-
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+        try {
+            await scrollToElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
+            await clickElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
     
-        await delay(3000);
-
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Fasilitas proyek perlu diisi minimal 1 (satu)!");
+    
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Error: Tidak ada keterangan error, ${error.message}`); 
+        }
     })
 
     it('agent should be able to fill facility form', async function() {
+        try {
+            await scrollToElement(driver, getProjectFacilityFormElement.checkMarkXpath);
+            await clickElement(driver, getProjectFacilityFormElement.checkMarkXpath);
+        
+            await scrollToElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
 
-        await scrollToElement(driver, getProjectFacilityFormElement.checkMarkXpath);
-        await clickElement(driver, getProjectFacilityFormElement.checkMarkXpath);
-    
-        await scrollToElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
+            await clickElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
 
-        await clickElement(driver, getProjectFacilityFormElement.facilitySubmitButtonXpath);
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Fasilitas proyek berhasil ditambahkan!");
 
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Fasilitas proyek berhasil ditambahkan!");
-
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Error: Fill fasiltas failed, ${error.message}`); 
+        }
+        
     });
 
     it ('Validate infrastuktur empty form', async function() {
@@ -305,44 +329,63 @@ describe ('Developer add project', function() {
     })
 
     it('Developer should can fill infrastruktur form', async function () {
-        await enterText(driver, getProjectInfrastrukturFormElement.name, 'Taman');
+        try {
+            await enterText(driver, getProjectInfrastrukturFormElement.name, 'Taman');
     
-        await clickElement(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturDropDown);
-        await clickElement(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturDropDownItem);
-    
-        await clickElement(driver, getProjectInfrastrukturFormElement.simpanJenisInfrastruktur);
-    
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Infrastrukutur proyek berhasil ditambahkan!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-        await delay(3000);
-    
-        await verifyElementExists(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturContainer);
-
+            await clickElement(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturDropDown);
+            await clickElement(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturDropDownItem);
+        
+            await clickElement(driver, getProjectInfrastrukturFormElement.simpanJenisInfrastruktur);
+        
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Infrastrukutur proyek berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+            await delay(3000);
+        
+            await verifyElementExists(driver, getProjectInfrastrukturFormElement.jenisInfrastrukturContainer);
+        } catch (error) {
+            throw new Error(`Error: Fill infrastruktur failed, ${error.message}`); 
+        }
+        
     });
 
     it ('validate published project', async function() {
-        await scrollToElement(driver, getProjectInfrastrukturFormElement.publishProject);
-        await clickElement(driver, getProjectInfrastrukturFormElement.publishProject);
-    
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Project berhasil di publish!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+        try {
+            await scrollToElement(driver, getProjectInfrastrukturFormElement.publishProject);
+            await clickElement(driver, getProjectInfrastrukturFormElement.publishProject);
+        
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Project berhasil di publish!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        } catch (error) {
+            throw new Error(`Error: Publish project failed, ${error.message}`); 
+        }
+
     })
 
     it ('Validate proyek information', async function() {
-        const province = `ACEH`
-        const city = ` KABUPATEN SIMEULUE`
-        const district = `SIMEULUE TIMUR`
-        const fullAddress = `${district}, ${city}, ${province}`
 
-        await scrollToElement(driver, getProjectDetailElement.title);
-        await assertText(driver, getProjectDetailElement.title, newProjectTitle);
+        const province = `SUMATERA BARAT`
+        const city = ` LEMBAH GUMANTI`
+        const district = `KABUPATEN SOLOK`
+        const fullAddress = `${getGlobalVariable.propertyAddress}, ${city}, ${district}, ${province}`
 
-        await scrollToElement(driver, getProjectDetailElement.headline);
-        await assertText(driver, getProjectDetailElement.headline, newProjectHeadline);
+        async function checkError(element, expectedText) {
+            try {
+                await scrollToElement(driver, element);
+                await assertText(driver, element, expectedText);
+            } catch (e) {
+                errors.push(e.message);
+            }
+        }
 
-        await scrollToElement(driver, getProjectDetailElement.fullAddress);
-        await assertText(driver, getProjectDetailElement.fullAddress, fullAddress);
+        checkError(getProjectDetailElement.title, newProjectTitle);
+        checkError(getProjectDetailElement.headline, newProjectHeadline);
+        checkError(getProjectDetailElement.fullAddress, fullAddress);
+    })
+
+    it ('Get current project URL', async function() {
+        getGlobalVariable.proyekUrl = await driver.getCurrentUrl();
+        console.log(getGlobalVariable.proyekUrl);
     })
 }); 

@@ -1,7 +1,9 @@
 const { Builder, By, Key, until } = require('selenium-webdriver');
 const { del, get } = require('selenium-webdriver/http');
-const { delay,scrollDown, generateRandomEmail, clickElementWithJS, scrollIntoView } = require('../../resource/utils/helper/helper');
+const { delay, scrollDown, assertTitle, uploadFile, assertUrl, clickElement, waitForElementVisible, assertText, enterText, scrollToElement, clearInput, verifyElementExists} = require('../../resource/utils/helper/helper');
+const popUpElement = require('../../resource/utils/elements/popUpElement');
 const detailPropertyElement = require('../../resource/utils/elements/detailPropertyElement');
+const interestPropertyErrorElement = require('../../resource/utils/elements/interestPropertyErrorElement');
 var should = require('chai').should();
 
 //define the url
@@ -9,6 +11,8 @@ const url = 'http://127.0.0.1:8000/';
 let driver;
 
 const getDetailPropertyElement = detailPropertyElement();
+const getInterestPropertyErrorElement = interestPropertyErrorElement();
+const getPopUpElement = popUpElement();
 
 describe('User Interest', function() {
 
@@ -24,277 +28,150 @@ describe('User Interest', function() {
         await driver.quit();
     });
 
-    afterEach(async function () {
-        await driver.get(url); 
 
-        let homeTitle = await driver.getTitle();
-        homeTitle.should.equal("Propertio - Home");
-    });
-
-    it ('user should can send interest message to agent', async function() {
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
+    it ('User can access detail property page', async function() {
+         // Klik tombol property sell
+        await clickElement(driver, getDetailPropertyElement.propertySellButton);
+        await assertTitle(driver, "Propertio - Iklan Properti");
 
         await delay(3000);
         await scrollDown(driver, 3200);
 
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
+        await scrollToElement(driver, getDetailPropertyElement.propertyXpath);
+        await clickElement(driver, getDetailPropertyElement.propertyXpath);
 
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
+        await assertTitle(driver, "Propertio - Detail Property");
 
         await delay(3000);
-        await scrollDown(driver, 4200);
+        await scrollToElement(driver, getDetailPropertyElement.propertyInterestContainer);
+    })
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("62865362816");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys(await generateRandomEmail());
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-        await driver.wait(until.elementLocated(By.className(getDetailPropertyElement.swalClass)), 5000);
-        let swalText = await driver.findElement(By.id(getDetailPropertyElement.swalTextId)).getText();
-
-        swalText.should.equal("Pesan berhasil dikirim");
-
-
-    });
-
-    it ('user should not send interest message with letter number format', async function() {
-        
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
-
-        await delay(3000);
-        await scrollDown(driver, 3200);
-
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
-
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
-
-        await delay(3000);
-        await scrollDown(driver, 4200);
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys(await generateRandomEmail());
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-
-        const phoneErrorElement = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId));
-        await driver.wait(until.elementIsVisible(phoneErrorElement), 5000);
-        let phoneError = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId)).getText();
-
-        phoneError.should.equal("Nomor telepon wajib diisi.");
+    it('user should can send interest message to agent', async function() {
+        try {
+            await enterText(driver, getDetailPropertyElement.nameXpath, "User Testing");
+            await enterText(driver, getDetailPropertyElement.phoneXpath, "62865362816");
+            await enterText(driver, getDetailPropertyElement.emailXpath, await generateRandomEmail());
+            
+            await clickElement(driver, getDetailPropertyElement.submitInformation);
+    
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await assertText(driver, getPopUpElement.popUpText, "Pesan berhasil dikirim");
+        } catch (error) {
+            throw new Error(`Faied: send interest message failed , ${error.message}`); 
+        }
     });
 
     it ('user should not send interest message with phone number less than 9 digits', async function() {
 
+        try {
+            await enterText(driver, getDetailPropertyElement.nameXpath, "User Testing");
+            await enterText(driver, getDetailPropertyElement.phoneXpath, "624362");
+            await enterText(driver, getDetailPropertyElement.emailXpath, await generateRandomEmail());
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
 
-        await delay(3000);
-        await scrollDown(driver, 3200);
+            await clickElement(driver, getDetailPropertyElement.submitInformation);
 
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
+            await assertText(driver, getPopUpElement.popUpText, "Pesan gagal disimpan : Tolong isi Nama, Nomer Telepon, dan Email dengan benar!");
+
+            await scrollToElement(driver, getInterestPropertyErrorElement.phoneError);
+            await assertText(driver, getInterestPropertyErrorElement.phoneError, "Nomor telepon harus terdiri dari 10 sampai 14 angka.");
+        }catch (error) {
+            throw new Error("Defect : User can send interest message with less number format");
+        }
         
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
-
-        await delay(3000);
-        await scrollDown(driver, 4200);
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("62898765");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys(await generateRandomEmail());
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-        const phoneErrorElement = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId));
-        await driver.wait(until.elementIsVisible(phoneErrorElement), 5000);
-        let phoneError = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId)).getText();
-
-        phoneError.should.equal("Nomor telepon harus terdiri dari 10 sampai 14 angka.");
-
     });
 
     it ('user should not send interest message with phone number more than 14 digits', async function() {
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
+        try {
+            await enterText(driver, getDetailPropertyElement.nameXpath, "User Testing");
+            await enterText(driver, getDetailPropertyElement.phoneXpath, "624362343234434");
+            await enterText(driver, getDetailPropertyElement.emailXpath, await generateRandomEmail());
 
-        await delay(3000);
-        await scrollDown(driver, 3200);
 
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
+            await clickElement(driver, getDetailPropertyElement.submitInformation);
 
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        await delay(3000);
-        await scrollDown(driver, 4200);
+            await assertText(driver, getPopUpElement.popUpText, "Pesan gagal disimpan : Tolong isi Nama, Nomer Telepon, dan Email dengan benar!");
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("6289876578352372");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys(await generateRandomEmail());
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-        const phoneErrorElement = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId));
-        await driver.wait(until.elementIsVisible(phoneErrorElement), 5000);
-        let phoneError = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId)).getText();
-
-        phoneError.should.equal("Nomor telepon harus terdiri dari 10 sampai 14 angka."); //keterangan error kurang tepat
+            await scrollToElement(driver, getInterestPropertyErrorElement.phoneError);
+            await assertText(driver, getInterestPropertyErrorElement.phoneError, "Nomor telepon harus terdiri dari 10 sampai 14 angka.");
+        }catch (error) {
+            throw new Error("Defect : User can send interest message with more than number format");
+        }
     });
 
     it ('user should not send interest message with invalid phone number', async function() {
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
-
-        await delay(3000);
-        await scrollDown(driver, 3200);
-
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
-
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
-
-        await delay(3000);
-        await scrollDown(driver, 4200);
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("123456789075");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys(await generateRandomEmail());
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.errorOkButton)).click();
-
-
         try {
-            const phoneErrorElement = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId));
-            await driver.wait(until.elementIsVisible(phoneErrorElement), 5000);
-            let phoneError = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId)).getText();
-    
-            phoneError.should.equal("Nomor telepon invalid.");
+            await enterText(driver, getDetailPropertyElement.nameXpath, "User Testing");
+            await enterText(driver, getDetailPropertyElement.phoneXpath, "3234362343234434");
+            await enterText(driver, getDetailPropertyElement.emailXpath, await generateRandomEmail());
+
+
+            await clickElement(driver, getDetailPropertyElement.submitInformation);
+
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+
+            await assertText(driver, getPopUpElement.popUpText, "Pesan gagal disimpan : Tolong isi Nama, Nomer Telepon, dan Email dengan benar!");
+
+            await scrollToElement(driver, getInterestPropertyErrorElement.phoneError);
+            await assertText(driver, getInterestPropertyErrorElement.phoneError, "Nomor telepon invalid.");
         }catch (error) {
             throw new Error("Defect : User can send interest message with invalid phone number");
         }
+
     });
 
-    it.only ('user should not send interest message with wrong email format', async function() {
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
-
-        await delay(3000);
-        await scrollDown(driver, 3200);
-
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
-
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
-
-        await delay(3000);
-        await scrollDown(driver, 4200);
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.nameXpath)).sendKeys("User Testing");
-        await driver.findElement(By.xpath(getDetailPropertyElement.phoneXpath)).sendKeys("6289876578352372");
-        await driver.findElement(By.xpath(getDetailPropertyElement.emailXpath)).sendKeys("usertestingmail.com");
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
+    it ('user should not send interest message with wrong email format', async function() {
 
         try {
-            const emailErrorElement = await driver.findElement(By.id(getDetailPropertyElement.emailErrorId));
-            await driver.wait(until.elementIsVisible(emailErrorElement), 5000);
-            let emailError = await driver.findElement(By.id(getDetailPropertyElement.emailErrorId)).getText();
-            emailError.should.equal("Email harus berupa alamat email yang valid.")
+            await enterText(driver, getDetailPropertyElement.nameXpath, "User Testing");
+            await enterText(driver, getDetailPropertyElement.phoneXpath, "624362343234434");
+            await enterText(driver, getDetailPropertyElement.emailXpath, "usertestingmail.com");
+
+
+            await clickElement(driver, getDetailPropertyElement.submitInformation);
+
+            await waitForElementVisible(driver, getPopUpElement.popUp);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+
+            await assertText(driver, getPopUpElement.popUpText, "Pesan gagal disimpan : Tolong isi Nama, Nomer Telepon, dan Email dengan benar!");
+
+            await scrollToElement(driver, getInterestPropertyErrorElement.phoneError);
+            await assertText(driver, getInterestPropertyErrorElement.emailError, "Email harus berupa alamat email yang valid.");
         }catch (error) {
-            throw new Error("Defect : Tidak ada keterangan error email yang valid");
+            throw new Error("Defect : User can send interest message with invalid email");
         }
-        
     });
 
-    it.only ('user should not send interest message with empty field form', async function() {
+    it('user should not send interest message with empty field form', async function() {        
+        await clickElement(driver, getDetailPropertyElement.submitInformation);
+        await waitForElementVisible(driver, getPopUpElement.popUp);
+        await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertySellButton)).click();
-        let propertyUrl = await driver.getTitle();
-        propertyUrl.should.equal("Propertio - Iklan Properti");
+        await assertText(driver, getPopUpElement.popUpText, "Pesan gagal disimpan : Tolong isi Nama, Nomer Telepon, dan Email dengan benar!");
 
-        await delay(3000);
-        await scrollDown(driver, 3200);
-
-        await driver.wait(until.elementIsVisible(driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath))), 5000);
-        let propertyTitle = await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).getText();
-        await driver.findElement(By.xpath(getDetailPropertyElement.propertyXpath)).click();
-
-        let propertyDetailUrl = await driver.getTitle();
-        propertyDetailUrl.should.equal("Propertio - Detail Property");
-        
-        // let propertyDetailTitle = await driver.findElement(By.id(propertyTitleElement)).getText();
-        // propertyDetailTitle.should.equal(propertyTitle);
-
-        await delay(3000);
-        await scrollDown(driver, 3500);
-
-        await driver.findElement(By.xpath(getDetailPropertyElement.submitInformation)).click();
-
-        try {
-            const nameErrorElement = await driver.findElement(By.id(getDetailPropertyElement.nameErrorId));
-            const phoneErrorElement = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId));
-            const emailErrorElement = await driver.findElement(By.id(getDetailPropertyElement.emailErrorId));
-            await driver.wait(until.elementIsVisible(nameErrorElement), 10000);
-            await driver.wait(until.elementIsVisible(phoneErrorElement), 10000);
-            await driver.wait(until.elementIsVisible(emailErrorElement), 10000);
+        const errors = [];
     
-            // await delay(3000);
-    
-            let emailError = await driver.findElement(By.id(getDetailPropertyElement.emailErrorId)).getText();
-            let phoneError = await driver.findElement(By.id(getDetailPropertyElement.phoneErrorId)).getText();
-            let nameError = await driver.findElement(By.id(getDetailPropertyElement.nameErrorId)).getText();
-    
-            phoneError.should.equal("Nomor telepon wajib diisi.");
-            nameError.should.equal("Nama wajib diisi.");
-            emailError.should.equal("Email harus berupa alamat email yang valid.");
-        }catch (error) {
-            throw new Error("Defect : Tidak ada keterangan field kosong yang muncul");
+        async function checkError(element, expectedText) {
+            try {
+                await scrollToElement(driver, element);
+                await assertText(driver, element, expectedText);
+            } catch (e) {
+                errors.push(e.message);
+            }
         }
-        
+
+        await checkError(getInterestPropertyErrorElement.firstNameError, "Nama wajib diisi.");
+        await checkError(getInterestPropertyErrorElement.phoneError, "Nomor telepon wajib diisi.");
+        await checkError(getInterestPropertyErrorElement.emailError, "Email wajib diisi.");
+
     });
 });

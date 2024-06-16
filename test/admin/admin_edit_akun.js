@@ -82,74 +82,83 @@ describe('Admin edit akun', function() {
     });
 
     it ('Admin should can edit password akun', async function() {
-        await clickElement(driver, getListAkunMenuElement.editAkunBtn)
-        await delay(3000);
-        await scrollDown(driver, 200);
+        try {
+            await clickElement(driver, getListAkunMenuElement.editAkunBtn)
+            await delay(3000);
+            await scrollDown(driver, 200);
 
-        await scrollToElement(driver, getListAkunFormElement.password, getListAkunFormElement.password);
-        await enterText(driver, getListAkunFormElement.password, getGlobalVariable.newPassword);
+            await scrollToElement(driver, getListAkunFormElement.password, getListAkunFormElement.password);
+            await enterText(driver, getListAkunFormElement.password, getGlobalVariable.newPassword);
 
-        await scrollToElement(driver, getListAkunFormElement.confirmationPassword, getListAkunFormElement.confirmationPassword);
-        await enterText(driver, getListAkunFormElement.confirmationPassword, getGlobalVariable.newPassword)
+            await scrollToElement(driver, getListAkunFormElement.confirmationPassword, getListAkunFormElement.confirmationPassword);
+            await enterText(driver, getListAkunFormElement.confirmationPassword, getGlobalVariable.newPassword)
 
-        await clickElement(driver, getListAkunFormElement.updateAkunButton);
+            await clickElement(driver, getListAkunFormElement.updateAkunButton);
 
-        await assertText(driver, getPopUpElement.popUpText, "Password berhasil di reset!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+            await assertText(driver, getPopUpElement.popUpText, "Password berhasil di reset!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        await delay(3000);
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('Admin should can change status akun', async function() {
+        try {
+            await driver.get('http://127.0.0.1:8000/account')
 
-        await driver.get('http://127.0.0.1:8000/account')
+            await enterText(driver, getListAkunMenuElement.searchInputXpath, "test");   
+            await delay(3000);
 
-        await enterText(driver, getListAkunMenuElement.searchInputXpath, "test");   
-        await delay(3000);
+            await clickElement(driver, getListAkunMenuElement.editAkunBtn)
+            await scrollDown(driver, 200);
 
-        await clickElement(driver, getListAkunMenuElement.editAkunBtn)
-        await scrollDown(driver, 200);
+            await scrollToElement(driver, getListAkunFormElement.activeStatusDropDown);
+            await clickElement(driver, getListAkunFormElement.activeStatusDropDown);
+            await clickElement(driver, getListAkunFormElement.statusInactive);
 
-        await scrollToElement(driver, getListAkunFormElement.activeStatusDropDown);
-        await clickElement(driver, getListAkunFormElement.activeStatusDropDown);
-        await clickElement(driver, `//a[@role='option' and contains(@class, 'dropdown-item') and .//span[contains(text(), 'Tidak Aktif')]]`);
+            await scrollToElement(driver, getListAkunFormElement.updateAkunButton);
+            await clickElement(driver, getListAkunFormElement.updateAkunButton);
 
-        await scrollToElement(driver, getListAkunFormElement.updateAkunButton);
-        await clickElement(driver, getListAkunFormElement.updateAkunButton);
+            await assertText(driver, getPopUpElement.popUpText, "Status berhasil diubah!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
 
-        await assertText(driver, getPopUpElement.popUpText, "Status berhasil diubah!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-
-        await delay(3000);
-
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('Admin cant store account with password less than 4 character', async function() {
-        
-        await driver.get('http://127.0.0.1:8000/account')
+        try {
+            await driver.get('http://127.0.0.1:8000/account')
 
-        await enterText(driver, getListAkunMenuElement.searchInputXpath, "test");   
-        await delay(3000);
+            await enterText(driver, getListAkunMenuElement.searchInputXpath, "test");   
+            await delay(3000);
 
-        await clickElement(driver, getListAkunMenuElement.editAkunBtn)
-        await scrollDown(driver, 200);
+            await clickElement(driver, getListAkunMenuElement.editAkunBtn)
+            await scrollDown(driver, 200);
 
-        await scrollToElement(driver, getListAkunFormElement.password);
-        await clearInput(driver, getListAkunFormElement.password);
+            await scrollToElement(driver, getListAkunFormElement.password);
+            await clearInput(driver, getListAkunFormElement.password);
 
-        await enterText(driver, getListAkunFormElement.password, "123");
+            await enterText(driver, getListAkunFormElement.password, "123");
 
-        await scrollToElement(driver, getListAkunFormElement.updateAkunButton);
-        await clickElement(driver, getListAkunFormElement.updateAkunButton);
+            await scrollToElement(driver, getListAkunFormElement.updateAkunButton);
+            await clickElement(driver, getListAkunFormElement.updateAkunButton);
 
-        await scrollToElement(driver, getListAkunFormErrorElement.passwordError);
-        await assertText(driver, getListAkunFormErrorElement.passwordError, "Kata sandi minimal berisi 5 karakter.");
+            await scrollToElement(driver, getListAkunFormErrorElement.passwordError);
+            await assertText(driver, getListAkunFormErrorElement.passwordError, "Kata sandi minimal berisi 5 karakter.");
 
-        await delay(2000);
+            await delay(2000);
+        } catch (error) {
+            throw new Error(`Test input password with 4 character less failed: ${error.message}`); 
+        }
     });
 
     it ('Admin cant store account with password confirmation not match', async function() {
-                
+        try {
             await scrollToElement(driver, getListAkunFormElement.password);
             await clearInput(driver, getListAkunFormElement.password);
 
@@ -163,6 +172,9 @@ describe('Admin edit akun', function() {
             await assertText(driver, getListAkunFormErrorElement.confirmationPasswordError, "Konfirmasi kata sandi dan kata sandi harus sama.");
 
             await delay(2000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
 });

@@ -114,53 +114,57 @@ describe ('Agent add property', function() {
     });
 
     it('agent should be able to fill location form', async function() {
-        await enterText(driver, getPropertyLocationElement.headlineXpath, "Rumah di Jakarta");
+        try {
+            await enterText(driver, getPropertyLocationElement.headlineXpath, "Rumah di Jakarta");
     
-        await clickElement(driver, getPropertyLocationElement.listingTypeDropdownXpath);
-        await clickElement(driver, getPropertyLocationElement.listingTypeItemXpath);
-    
-        await enterText(driver, getPropertyLocationElement.titleProperty, newPropertyTitle);
-    
-        await clickElement(driver, getPropertyLocationElement.propertyTypeDropdownXpath);
-        await clickElement(driver, getPropertyLocationElement.propertyTypeItemXpath);
-    
-        await clickElement(driver, getPropertyLocationElement.certificateDropdownXpath);
-        await clickElement(driver, getPropertyLocationElement.certificateItemXpath);
-    
-        await enterText(driver, getPropertyLocationElement.addressXpath, getGlobalVariable.propertyAddress);
-    
-        await clickElement(driver, getPropertyLocationElement.provinceDropdownXpath);
-        await waitForElementVisible(driver, getPropertyLocationElement.provinceItemXpath);
-        await clickElement(driver, getPropertyLocationElement.provinceItemXpath);
-    
-        await clickElement(driver, getPropertyLocationElement.cityDropdownXpath);
-        await waitForElementVisible(driver, getPropertyLocationElement.cityItemXpath);
-        await clickElement(driver, getPropertyLocationElement.cityItemXpath);
-    
-        await clickElement(driver, getPropertyLocationElement.districtDropdownXpath);
-        await waitForElementVisible(driver, getPropertyLocationElement.districtItemXpath);
-        await clickElement(driver, getPropertyLocationElement.districtItemXpath);
-    
-        await enterText(driver, getPropertyLocationElement.postalCoceXpath, "12345");
-    
-        await enterText(driver, getPropertyLocationElement.mapXpath, "Jl. Citra Kalibiru No. 1, Jakarta Pusat");
-        await delay(5000);
-    
-        const mapInput = await driver.findElement(By.xpath(getPropertyLocationElement.mapXpath));
-        await mapInput.sendKeys(Key.ARROW_DOWN, Key.ENTER);
+            await clickElement(driver, getPropertyLocationElement.listingTypeDropdownXpath);
+            await clickElement(driver, getPropertyLocationElement.listingTypeItemXpath);
+        
+            await enterText(driver, getPropertyLocationElement.titleProperty, newPropertyTitle);
+        
+            await clickElement(driver, getPropertyLocationElement.propertyTypeDropdownXpath);
+            await clickElement(driver, getPropertyLocationElement.propertyTypeItemXpath);
+        
+            await clickElement(driver, getPropertyLocationElement.certificateDropdownXpath);
+            await clickElement(driver, getPropertyLocationElement.certificateItemXpath);
+        
+            await enterText(driver, getPropertyLocationElement.addressXpath, getGlobalVariable.propertyAddress);
+        
+            await clickElement(driver, getPropertyLocationElement.provinceDropdownXpath);
+            await waitForElementVisible(driver, getPropertyLocationElement.provinceItemXpath);
+            await clickElement(driver, getPropertyLocationElement.provinceItemXpath);
+        
+            await clickElement(driver, getPropertyLocationElement.cityDropdownXpath);
+            await waitForElementVisible(driver, getPropertyLocationElement.cityItemXpath);
+            await clickElement(driver, getPropertyLocationElement.cityItemXpath);
+        
+            await clickElement(driver, getPropertyLocationElement.districtDropdownXpath);
+            await waitForElementVisible(driver, getPropertyLocationElement.districtItemXpath);
+            await clickElement(driver, getPropertyLocationElement.districtItemXpath);
+        
+            await enterText(driver, getPropertyLocationElement.postalCoceXpath, "12345");
+        
+            await enterText(driver, getPropertyLocationElement.mapXpath, "Jl. Citra Kalibiru No. 1, Jakarta Pusat");
+            await delay(5000);
+        
+            const mapInput = await driver.findElement(By.xpath(getPropertyLocationElement.mapXpath));
+            await mapInput.sendKeys(Key.ARROW_DOWN, Key.ENTER);
 
-        await scrollToElement(driver, getPropertyLocationElement.locationSubmitButtonXpath);
-    
-        await clickElement(driver, getPropertyLocationElement.locationSubmitButtonXpath);
-    
-        await delay(3000);
-    
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Data Berhasil Disimpan!");
-    
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+            await scrollToElement(driver, getPropertyLocationElement.locationSubmitButtonXpath);
+        
+            await clickElement(driver, getPropertyLocationElement.locationSubmitButtonXpath);
+        
+            await delay(3000);
+        
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Data Berhasil Disimpan!");
+        
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
 
@@ -191,52 +195,57 @@ describe ('Agent add property', function() {
     });
 
     it('agent should be able to fill detail form', async function() {
-        await enterText(driver, getPropertyDetailElement.surfaceAreaXpath, "100");
-        await enterText(driver, getPropertyDetailElement.buildingAreaXpath, "500");
-        await enterText(driver, getPropertyDetailElement.floorXpath, "2");
-        await enterText(driver, getPropertyDetailElement.descriptionXpath, "Rumah di Jakarta Utara");
-        await enterText(driver, getPropertyDetailElement.bedroomXpath, "3");
-        await enterText(driver, getPropertyDetailElement.bathroomXpath, "2");
-    
-        await clickElement(driver, getPropertyDetailElement.garageDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.garageItemXpath);
-    
-        await enterText(driver, getPropertyDetailElement.priceXpath, getGlobalVariable.propertyPrice);
-    
-        await clickElement(driver, getPropertyDetailElement.priceTypeXpath);
-        await clickElement(driver, getPropertyDetailElement.priceTypeItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.powerSupplyDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.powerSupplyItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.waterTypeDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.waterTypeItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.interiorDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.interiorItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.conditionDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.conditionItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.facingDropdownXpath);
-        await clickElement(driver, getPropertyDetailElement.facingItemXpath);
-    
-        await clickElement(driver, getPropertyDetailElement.roadAccessXpath);
-        await clickElement(driver, getPropertyDetailElement.roadAccessItemXpath);
-    
-        await enterText(driver, getPropertyDetailElement.yearBuiltXpath, "2020");
-    
-        await clickElement(driver, getPropertyDetailElement.detailSubmitButtonXpath);
-    
-        await delay(3000);
-    
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-    
-        await assertText(driver, getPopUpElement.popUpText, "Detail Properti berhasil ditambahkan!");
-    
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+        try {
+            await enterText(driver, getPropertyDetailElement.surfaceAreaXpath, "100");
+            await enterText(driver, getPropertyDetailElement.buildingAreaXpath, "500");
+            await enterText(driver, getPropertyDetailElement.floorXpath, "2");
+            await enterText(driver, getPropertyDetailElement.descriptionXpath, "Rumah di Jakarta Utara");
+            await enterText(driver, getPropertyDetailElement.bedroomXpath, "3");
+            await enterText(driver, getPropertyDetailElement.bathroomXpath, "2");
+        
+            await clickElement(driver, getPropertyDetailElement.garageDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.garageItemXpath);
+        
+            await enterText(driver, getPropertyDetailElement.priceXpath, getGlobalVariable.propertyPrice);
+        
+            await clickElement(driver, getPropertyDetailElement.priceTypeXpath);
+            await clickElement(driver, getPropertyDetailElement.priceTypeItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.powerSupplyDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.powerSupplyItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.waterTypeDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.waterTypeItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.interiorDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.interiorItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.conditionDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.conditionItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.facingDropdownXpath);
+            await clickElement(driver, getPropertyDetailElement.facingItemXpath);
+        
+            await clickElement(driver, getPropertyDetailElement.roadAccessXpath);
+            await clickElement(driver, getPropertyDetailElement.roadAccessItemXpath);
+        
+            await enterText(driver, getPropertyDetailElement.yearBuiltXpath, "2020");
+        
+            await clickElement(driver, getPropertyDetailElement.detailSubmitButtonXpath);
+        
+            await delay(3000);
+        
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+        
+            await assertText(driver, getPopUpElement.popUpText, "Detail Properti berhasil ditambahkan!");
+        
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
+        
     });
 
     it ('Agent cant submit empty property image', async function() {
@@ -256,104 +265,122 @@ describe ('Agent add property', function() {
     })
 
     it ('Validate Virtual tour field', async function() {
-        await scrollToElement(driver, getPropertyMediaElement.virtualTourNameXpath);
-        await enterText(driver, getPropertyMediaElement.virtualTourNameXpath, "Virtual Tour Rumah");
+        try {
+            await scrollToElement(driver, getPropertyMediaElement.virtualTourNameXpath);
+            await enterText(driver, getPropertyMediaElement.virtualTourNameXpath, "Virtual Tour Rumah");
 
-        await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
-        await clickElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
+            await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
+            await clickElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
 
-        await delay(2000);
+            await delay(2000);
 
-        await scrollToElement(driver, getPropertyMediaElement.virtualTourNameXpath);
-        await verifyElementExists(driver, getPropertyFormErrorElement.virtualTourError);
+            await scrollToElement(driver, getPropertyMediaElement.virtualTourNameXpath);
+            await verifyElementExists(driver, getPropertyFormErrorElement.virtualTourError);
 
-        await assertText(driver, getPropertyFormErrorElement.virtualTourError, "There is empty input. Please fill the empty input.");
+            await assertText(driver, getPropertyFormErrorElement.virtualTourError, "There is empty input. Please fill the empty input.");
+            
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Keterangan error tidak muncul : ${error.message}`); 
+        }
         
-        await delay(3000);
     })
 
     it ('Valiate Video Link field', async function() {
-        await scrollToElement(driver, getPropertyMediaElement.videoLinkXpath);
-        await enterText(driver, getPropertyMediaElement.videoLinkXpath, "qwertyuiop");
-
-        await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
-
-        await delay(2000);
-
-        await scrollToElement(driver, getPropertyMediaElement.videoLinkXpath);
-        await verifyElementExists(driver, getPropertyFormErrorElement.videoMediaError);
-
-        await assertText(driver, getPropertyFormErrorElement.videoMediaError, "Format link video tidak valid.");
-
-        await driver.navigate().refresh();
-
+        try {
+            await scrollToElement(driver, getPropertyMediaElement.videoLinkXpath);
+            await enterText(driver, getPropertyMediaElement.videoLinkXpath, "qwertyuiop");
+    
+            await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
+    
+            await delay(2000);
+    
+            await scrollToElement(driver, getPropertyMediaElement.videoLinkXpath);
+            await verifyElementExists(driver, getPropertyFormErrorElement.videoMediaError);
+    
+            await assertText(driver, getPropertyFormErrorElement.videoMediaError, "Format link video tidak valid.");
+    
+            await driver.navigate().refresh();
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     })
 
     it('agent should be able to fill media form', async function() {
-        const fileInputXpath = getPropertyMediaElement.uploadSitePlanXpath;
-        await scrollToElement(driver, fileInputXpath);
-        await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
-    
-        const uploadButtonXpath = getPropertyMediaElement.uploadSitePlanButtonXpath;
-        await scrollToElement(driver, uploadButtonXpath);
-        await clickElement(driver, uploadButtonXpath);
-    
-        await delay(3000);
-    
-        const sitePlanUploadPopUpXpath = getPopUpElement.popUpText;
-        await waitForElementVisible(driver, sitePlanUploadPopUpXpath);
-        await assertText(driver, getPopUpElement.popUpText, "Foto properti berhasil ditambahkan!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        const imageContainerXpath = getPropertyMediaElement.sitePlanImageContainerXpath;
-        await waitForElementVisible(driver, imageContainerXpath);
-    
-        await enterText(driver, getPropertyMediaElement.videoLinkXpath, "https://www.youtube.com/watch?v=XN59FvlTyHo");
-        await enterText(driver, getPropertyMediaElement.virtualTourNameXpath, "Virtual Tour Rumah");
-        await enterText(driver, getPropertyMediaElement.virtualTourLinkXpath, "https://www.youtube.com/watch?v=6qJlw5w4fPc");
-    
-        await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath)
-        await clickElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
-    
-        await delay(3000);
-    
-        const mediaPopUpXpath = getPopUpElement.popUpText;
-        await waitForElementVisible(driver, mediaPopUpXpath);
-        await assertText(driver, getPopUpElement.mediaPopUpTextXpath, "Seluruh data media berhasil ditambahkan!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+        try {
+            const fileInputXpath = getPropertyMediaElement.uploadSitePlanXpath;
+            await scrollToElement(driver, fileInputXpath);
+            await driver.findElement(By.xpath(fileInputXpath)).sendKeys(getGlobalVariable.propertyImage);
+        
+            const uploadButtonXpath = getPropertyMediaElement.uploadSitePlanButtonXpath;
+            await scrollToElement(driver, uploadButtonXpath);
+            await clickElement(driver, uploadButtonXpath);
+        
+            await delay(3000);
+        
+            const sitePlanUploadPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, sitePlanUploadPopUpXpath);
+            await assertText(driver, getPopUpElement.popUpText, "Foto properti berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            const imageContainerXpath = getPropertyMediaElement.sitePlanImageContainerXpath;
+            await waitForElementVisible(driver, imageContainerXpath);
+        
+            await enterText(driver, getPropertyMediaElement.videoLinkXpath, "https://www.youtube.com/watch?v=XN59FvlTyHo");
+            await enterText(driver, getPropertyMediaElement.virtualTourNameXpath, "Virtual Tour Rumah");
+            await enterText(driver, getPropertyMediaElement.virtualTourLinkXpath, "https://www.youtube.com/watch?v=6qJlw5w4fPc");
+        
+            await scrollToElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath)
+            await clickElement(driver, getPropertyMediaElement.mediaSubmitButtonXpath);
+        
+            await delay(3000);
+        
+            const mediaPopUpXpath = getPopUpElement.popUpText;
+            await waitForElementVisible(driver, mediaPopUpXpath);
+            await assertText(driver, getPopUpElement.mediaPopUpTextXpath, "Seluruh data media berhasil ditambahkan!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('Agent should not be able to fill facility form with empty fields', async function() {
-
-        await scrollToElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
-        await clickElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
-
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Fasilitas properti perlu diisi minimal 1 (satu)!");
-
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+        try {
+            await scrollToElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
+            await clickElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
     
-        await delay(3000);
-
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Fasilitas properti perlu diisi minimal 1 (satu)!");
+    
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
+        } catch (error) {
+            throw new Error(`Tidak ada keterangan error: ${error.message}`); 
+        }
     })
     
     it('agent should be able to fill facility form', async function() {
+        try {
+            await scrollToElement(driver, getPropertyFacilityElement.checkMarkXpath);
+            await clickElement(driver, getPropertyFacilityElement.checkMarkXpath);
+        
+            await scrollToElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
 
-        await scrollToElement(driver, getPropertyFacilityElement.checkMarkXpath);
-        await clickElement(driver, getPropertyFacilityElement.checkMarkXpath);
-    
-        await scrollToElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
+            await clickElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
 
-        await clickElement(driver, getPropertyFacilityElement.facilitySubmitButtonXpath);
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Fasilitas proyek berhasil ditambahkan!");
 
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Fasilitas proyek berhasil ditambahkan!");
-
-        await clickElement(driver, getPopUpElement.popUpConfirm);
+            await clickElement(driver, getPopUpElement.popUpConfirm);
     
         await delay(3000);
+        } catch (error) {
+            throw new Error(`fill fasilitas failed: ${error.message}`); 
+        }
+        
     });
 
     it ('Validate property information', async function() {
@@ -384,19 +411,24 @@ describe ('Agent add property', function() {
     })
 
     it('agent should be able to publish property', async function() {
-        await scrollToElement(driver, getPropertyRingkasanElement.publishPropertyButtonXpath);
-        await clickElement(driver, getPropertyRingkasanElement.publishPropertyButtonXpath);
-    
-        await delay(3000);
+        try {
+            await scrollToElement(driver, getPropertyRingkasanElement.publishPropertyButtonXpath);
+            await clickElement(driver, getPropertyRingkasanElement.publishPropertyButtonXpath);
+        
+            await delay(3000);
 
-        await waitForElementVisible(driver, getPopUpElement.popUpText);
-        await assertText(driver, getPopUpElement.popUpText, "Property berhasil di publish!");
-    
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-    
-        await delay(3000);
+            await waitForElementVisible(driver, getPopUpElement.popUpText);
+            await assertText(driver, getPopUpElement.popUpText, "Property berhasil di publish!");
+        
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+        
+            await delay(3000);
 
-        await assertUrl(driver, "http://127.0.0.1:8000/property");
+            await assertUrl(driver, "http://127.0.0.1:8000/property");
+        } catch (error) {
+            throw new Error(`publish failed: ${error.message}`); 
+        }
+        
     });
 
     it('agent should be able to see the property in list property in tab tayang', async function() {

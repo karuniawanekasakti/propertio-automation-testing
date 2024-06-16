@@ -37,22 +37,27 @@ describe('Admin login', function() {
     });
 
     it ('Admin should can login with valid information', async function() {
-        await assertTitle(driver, "Propertio - Home");
-
-        await clickElement(driver, getLoginElement.loginRegisterButtonXpath);
-        await assertTitle(driver, "Propertio - Login");
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
-
-        await enterText(driver, getLoginElement.emailFieldXpath, "admin@mail.com");
-        await enterText(driver, getLoginElement.passwordFieldXpath, "11111111");
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-
-        await assertVisibleText(driver, getLoginElement.loginModalXpath, "Login ke Akun Anda berhasil!");
-
-        await delay(3000);
-        await assertUrl(driver, "http://127.0.0.1:8000/dashboard");
-
-        await assertVisibleText(driver, getMenuElement.adminUserProfileDropdownXpath, "Minpro Utama");
+        try {
+            await assertTitle(driver, "Propertio - Home");
+    
+            await clickElement(driver, getLoginElement.loginRegisterButtonXpath);
+            await assertTitle(driver, "Propertio - Login");
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
+    
+            await enterText(driver, getLoginElement.emailFieldXpath, "admin@mail.com");
+            await enterText(driver, getLoginElement.passwordFieldXpath, "11111111");
+            await clickElement(driver, getLoginElement.loginButtonXpath);
+    
+            await assertVisibleText(driver, getLoginElement.loginModalXpath, "Login ke Akun Anda berhasil!");
+    
+            await delay(3000);
+            await assertUrl(driver, "http://127.0.0.1:8000/dashboard");
+    
+            await assertVisibleText(driver, getMenuElement.adminUserProfileDropdownXpath, "Minpro Utama");
+    
+        } catch (error) {
+            throw new Error(`Login test failed: ${error.message}`); 
+        }
     });
 
     it('Admin should be able to logout', async function() {
@@ -72,25 +77,35 @@ describe('Admin login', function() {
     });
 
     it('Admin should not be able to login with an invalid email', async function() {
-        await driver.navigate().refresh();
+        try {
+            await driver.navigate().refresh();
+        
+            await enterText(driver, getLoginElement.emailFieldXpath, "adminn@mail.com");
+            await enterText(driver, getLoginElement.passwordFieldXpath, "11111111");
+            await clickElement(driver, getLoginElement.loginButtonXpath);
+        
+            await assertVisibleText(driver, getLoginElement.loginModalXpath, "Invalid email or password.");
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
     
-        await enterText(driver, getLoginElement.emailFieldXpath, "adminn@mail.com");
-        await enterText(driver, getLoginElement.passwordFieldXpath, "11111111");
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-    
-        await assertVisibleText(driver, getLoginElement.loginModalXpath, "Invalid email or password.");
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
+        } catch (error) {
+            throw new Error(`Login with invalid email test failed: ${error.message}`); 
+        }
     });
 
     it('Admin should not be able to login with an invalid password', async function() {
-        await driver.navigate().refresh();
+        try {
+            await driver.navigate().refresh();
+        
+            await enterText(driver, getLoginElement.emailFieldXpath, "admin@mail.com");
+            await enterText(driver, getLoginElement.passwordFieldXpath, "12345678");
+            await clickElement(driver, getLoginElement.loginButtonXpath);
+        
+            await assertVisibleText(driver, getLoginElement.loginModalXpath, "Invalid email or password.");
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
     
-        await enterText(driver, getLoginElement.emailFieldXpath, "admin@mail.com");
-        await enterText(driver, getLoginElement.passwordFieldXpath, "12345678");
-        await clickElement(driver, getLoginElement.loginButtonXpath);
-    
-        await assertVisibleText(driver, getLoginElement.loginModalXpath, "Invalid email or password.");
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
+        } catch (error) {
+            throw new Error(`Login with invalid password test failed: ${error.message}`); 
+        }
     });
 
     it('Admin should not be able to login with empty fields', async function() {

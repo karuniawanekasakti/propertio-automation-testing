@@ -74,73 +74,73 @@ describe('Admin edit tipe fasilitas', function() {
 
 
     it ('Admin should can edit fasilitas', async function() {
-
-        await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, 'Testing');
-
-        await delay(3000);
-
-        await verifyElementExists(driver, `//td[normalize-space()= '${newFasilitas}']`);
-
-        await clickElement(driver, getTipeFasilitasMenuElement.editFasilitasXpath)
-
-        await delay(3000);
-        await scrollDown(driver, 200);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await clearInput(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newEditFasilitas);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, `//span[normalize-space()='Keunggulan']`);
-
-        await clickElement(driver, getTipeFasilitasFormElement.updateTipeFasilitasSubmitButtonXpath);
-
-        await assertText(driver, getPopUpElement.tipeFasilitasPopUpTextXpath, "Tipe Fasilitas berhasil diubah!");
-        await clickElement(driver, getPopUpElement.tipeFasilitasPopUpConfirmButtonXpath); 
-
-        await delay(3000);
-
+        try {
+            await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, 'Testing');
+    
+            await delay(3000);
+    
+            await verifyElementExists(driver, `//td[normalize-space()= '${newFasilitas}']`);
+    
+            await clickElement(driver, getTipeFasilitasMenuElement.editFasilitasXpath)
+    
+            await delay(3000);
+            await scrollDown(driver, 200);
+    
+            await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await clearInput(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newEditFasilitas);
+    
+            await clickElement(driver, getTipeFasilitasFormElement.updateTipeFasilitasSubmitButtonXpath);
+    
+            await assertText(driver, getPopUpElement.tipeFasilitasPopUpTextXpath, "Tipe Fasilitas berhasil diubah!");
+            await clickElement(driver, getPopUpElement.tipeFasilitasPopUpConfirmButtonXpath); 
+    
+            await delay(3000);
+    
+        } catch (error) {
+            throw new Error(`Edit fasilitas test failed: ${error.message}`); 
+        }
     });
 
     it ('Admin should cant edit fasilitas with existed name', async function() {
-        await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, 'Testing');
-
-        await delay(3000);
-
-        await verifyElementExists(driver, `//td[normalize-space()= '${newFasilitas}']`);
-
-        await clickElement(driver, getTipeFasilitasMenuElement.editFasilitasXpath)
-
-        await delay(3000);
-        await scrollDown(driver, 200);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await clearInput(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, "AC");
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, `//span[normalize-space()='Keunggulan']`);
-
-        await clickElement(driver, getTipeFasilitasFormElement.updateTipeFasilitasSubmitButtonXpath);
-
-        await verifyElementExists(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath);
-        await assertText(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama sudah ada sebelumnya.");
+        try {
+            await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, 'Testing');
+    
+            await delay(3000);
+    
+            await verifyElementExists(driver, `//td[normalize-space()= '${newFasilitas}']`);
+    
+            await clickElement(driver, getTipeFasilitasMenuElement.editFasilitasXpath);
+    
+            await delay(3000);
+            await scrollDown(driver, 200);
+    
+            await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await clearInput(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, "AC");
+    
+            await clickElement(driver, getTipeFasilitasFormElement.updateTipeFasilitasSubmitButtonXpath);
+    
+            await verifyElementExists(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath);
+            await assertText(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama sudah ada sebelumnya.");
+    
+        } catch (error) {
+            throw new Error(`Edit fasilitas with existed name test failed: ${error.message}`); 
+        }
     });
 
-    it ('Validate if the new fasilitas is added', async function() {
-        await assertUrl(driver, "http://127.0.0.1:8000/facility-type");
-        await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, newEditFasilitas);
-
-        await delay(3000);
-
-        await verifyElementExists(driver, `//td[normalize-space()= '${newEditFasilitas}']`);
-
+    it ('Validate if the new fasilitas is updated', async function() {
+        try {
+            await assertUrl(driver, "http://127.0.0.1:8000/facility-type");
+            await enterText(driver, getTipeFasilitasMenuElement.searchInputXpath, newEditFasilitas);
+    
+            await delay(3000);
+    
+            await verifyElementExists(driver, `//td[normalize-space()= '${newEditFasilitas}']`);
+    
+        } catch (error) {
+            throw new Error(`Validation of updated fasilitas test failed: ${error.message}`); 
+        }
     });
 
 });

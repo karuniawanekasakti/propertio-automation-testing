@@ -94,7 +94,8 @@ async function verifyElementExists(driver, xpath, timeout = 5000) {
     }
 }
 
-async function scrollToElement(driver, xpath) {
+async function scrollToElement(driver, xpath) { 
+    await delay(2000); // Adding a delay to ensure the element is scrolled into view
     const element = await driver.findElement(By.xpath(xpath));
     await driver.executeScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", element);
     await driver.sleep(1000); // Adding a delay to ensure the element is scrolled into view
@@ -108,6 +109,13 @@ async function clearInput(driver, xpath) {
 async function uploadFile(driver, xpath, filePath) {
     const element = await waitForElementVisible(driver, xpath);
     await element.sendKeys(filePath);
+}
+
+async function verifyTextContains(driver, elementSelector, expectedText) {
+    const element = await driver.findElement(By.xpath(elementSelector));
+    await driver.wait(until.elementIsVisible(element), 10000); // 10 seconds timeout
+    const elementText = await element.getText();
+    return elementText.includes(expectedText);
 }
 
 module.exports = { 
@@ -128,5 +136,6 @@ module.exports = {
     verifyElementExists,
     scrollToElement,
     clearInput,
-    uploadFile
+    uploadFile,
+    verifyTextContains
 };

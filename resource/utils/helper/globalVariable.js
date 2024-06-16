@@ -15,6 +15,7 @@ function globalVariable() {
     const fasilitasIconImage = `E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\properti\\tipe_fasilitas.svg`;
     const profilePictureImage = `E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\pp\\500kb (1).png`;
     const propertyImage = `E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\properti\\properti_1.jpg`
+    const profilePhoto = `E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\pp\\user_profile.jpg`
     const agentName = `agent`
     const randomLastname = `testing ${uniqueName}`
     const agentFullName = `${agentName} ${randomLastname}`
@@ -27,7 +28,7 @@ function globalVariable() {
     const propertyPrice = `1000000000`
     const proyekDocument = `E:\\KULIAH\\TA\\Propertio\\QA\\Automation\\test item\\properti\\Modul Manual Testing (2).pdf`
     const proyekUrl = ``
-
+    const newUnitTitle = `Testing Unit ${uniqueName}`
 
     return {
         newFasilitas,
@@ -45,6 +46,7 @@ function globalVariable() {
         propertyImage,
         randomLastname,
         agentName,
+        profilePhoto,
         newPassword,
         agentFullName,
         propertyTitle,
@@ -54,7 +56,8 @@ function globalVariable() {
         newPropertyTitle,
         proyekDocument,
         proyekUrl,
-        proyekHeadline
+        proyekHeadline,
+        newUnitTitle
     };
 }
 

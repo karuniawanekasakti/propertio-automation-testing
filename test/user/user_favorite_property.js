@@ -64,63 +64,67 @@ describe ('User favorite property', function() {
     });
 
     it ('user should can favorite property', async function() {
+        try {
+            await delay(3000);
+            await assertUrl(driver, "http://127.0.0.1:8000/");
 
-        await delay(3000);
-        await assertUrl(driver, "http://127.0.0.1:8000/");
+            const propertyButtonXpath = getMenuElement.propertyButtonXpath;
+            await waitForElementVisible(driver, propertyButtonXpath);
+            await clickElement(driver, propertyButtonXpath);
 
-        const propertyButtonXpath = getMenuElement.propertyButtonXpath;
-        await waitForElementVisible(driver, propertyButtonXpath);
-        await clickElement(driver, propertyButtonXpath);
+            await assertUrl(driver, "http://127.0.0.1:8000/home/property/index?type=sell");
 
-        await assertUrl(driver, "http://127.0.0.1:8000/home/property/index?type=sell");
+            await delay(3000);
+            await scrollDown(driver, 2000);
 
-        await delay(3000);
-        await scrollDown(driver, 2000);
+            const favoritePropertyButtonXpath = getMenuElement.favoritePropertyButtonXpath;
+            await waitForElementVisible(driver, favoritePropertyButtonXpath);
+            await clickElement(driver, favoritePropertyButtonXpath);
 
-        const favoritePropertyButtonXpath = getMenuElement.favoritePropertyButtonXpath;
-        await waitForElementVisible(driver, favoritePropertyButtonXpath);
-        await clickElement(driver, favoritePropertyButtonXpath);
+            const favoriteModalXpath = getPopUpElement.favoriteModalXpath;
+            await waitForElementVisible(driver, favoriteModalXpath);
 
-        const favoriteModalXpath = getPopUpElement.favoriteModalXpath;
-        await waitForElementVisible(driver, favoriteModalXpath);
+            await assertText(driver, getPopUpElement.favoriteModalTextXpath, "Tersimpan di Favorit!");
 
-        await assertText(driver, getPopUpElement.favoriteModalTextXpath, "Tersimpan di Favorit!");
-
-        await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
-
+            await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('user should can unfavorite property', async function() {
-        await waitForElementVisible(driver, getMenuElement.userProfileDropdownXpath);
-        await clickElement(driver, getMenuElement.userProfileDropdownXpath);
-    
-        await waitForElementVisible(driver, getMenuElement.userFavoriteButtonXpath);
-        await clickElement(driver, getMenuElement.userFavoriteButtonXpath);
-    
-        await assertUrl(driver, "http://127.0.0.1:8000/favorite");
-    
-        await delay(3000);
-    
-        await waitForElementVisible(driver, getMenuElement.favoriteTabXpath);
-        await clickElement(driver, getMenuElement.favoriteTabXpath);
-    
-        await scrollDown(driver, 600);
-    
-        await waitForElementVisible(driver, getMenuElement.propertyContainerXpath);
-    
-        await clickElement(driver, getMenuElement.unfavoritePropertyButtonXpath);
-    
-        await waitForElementVisible(driver, getPopUpElement.favoriteModalXpath);
-        await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
-    
-        await delay(2000);
-    
-        await waitForElementVisible(driver, getPopUpElement.favoriteModalXpath);
-    
-        await assertText(driver, getPopUpElement.favoriteModalTextXpath, "Berhasil menghapus Properti Favorit!");
-        await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
-
-
+        try {
+            await waitForElementVisible(driver, getMenuElement.userProfileDropdownXpath);
+            await clickElement(driver, getMenuElement.userProfileDropdownXpath);
+        
+            await waitForElementVisible(driver, getMenuElement.userFavoriteButtonXpath);
+            await clickElement(driver, getMenuElement.userFavoriteButtonXpath);
+        
+            await assertUrl(driver, "http://127.0.0.1:8000/favorite");
+        
+            await delay(3000);
+        
+            await waitForElementVisible(driver, getMenuElement.favoriteTabXpath);
+            await clickElement(driver, getMenuElement.favoriteTabXpath);
+        
+            await scrollDown(driver, 600);
+        
+            await waitForElementVisible(driver, getMenuElement.propertyContainerXpath);
+        
+            await clickElement(driver, getMenuElement.unfavoritePropertyButtonXpath);
+        
+            await waitForElementVisible(driver, getPopUpElement.favoriteModalXpath);
+            await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
+        
+            await delay(2000);
+        
+            await waitForElementVisible(driver, getPopUpElement.favoriteModalXpath);
+        
+            await assertText(driver, getPopUpElement.favoriteModalTextXpath, "Berhasil menghapus Properti Favorit!");
+            await clickElement(driver, getPopUpElement.favoriteModalConfirmXpath);
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it('Validate if there is an empty favorite list', async function() {
@@ -166,18 +170,23 @@ describe ('User favorite property', function() {
     });
 
     it ('user should can not favorite property if not logged in', async function() {
-        await waitForElementVisible(driver, getMenuElement.propertyButtonXpath);
-        await clickElement(driver, getMenuElement.propertyButtonXpath);
+        try {
+            await waitForElementVisible(driver, getMenuElement.propertyButtonXpath);
+            await clickElement(driver, getMenuElement.propertyButtonXpath);
 
-        await assertUrl(driver, "http://127.0.0.1:8000/home/property/index?type=sell");
+            await assertUrl(driver, "http://127.0.0.1:8000/home/property/index?type=sell");
 
-        await delay(3000);
-        await scrollDown(driver, 2000);
+            await delay(3000);
+            await scrollDown(driver, 2000);
 
-        await waitForElementVisible(driver, getMenuElement.unloginFavoriteButtonXpath);
-        await clickElement(driver, getMenuElement.unloginFavoriteButtonXpath);
+            await waitForElementVisible(driver, getMenuElement.unloginFavoriteButtonXpath);
+            await clickElement(driver, getMenuElement.unloginFavoriteButtonXpath);
 
-        await assertUrl(driver, "http://127.0.0.1:8000/login");
+            await assertUrl(driver, "http://127.0.0.1:8000/login");
+            
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
 

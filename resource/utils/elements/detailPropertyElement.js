@@ -1,6 +1,6 @@
 function detailPropertyElement() {
-    const propertySellButton = `//ul[@id='respMenu']/li/a/span`;
-    const propertyXpath = `//*[@id="property"]/div[3]/div/div/h6/a[2]`;
+    const propertySellButton = `//span[@class='title'][normalize-space()='Beli']`;
+    const propertyXpath = `(//a[contains(text(),'Perumahan Citra Kalibiru Cibit...')])[2]`;
     const informationButtonXpath = `//*[@id="mm-4"]/div[1]/div[6]/section[2]/div/div[2]/div[2]/div/div[1]/button[3]`;
     const propertyTitleElement = 'headline-property';
     const informationModalId = 'information-modal';
@@ -14,6 +14,7 @@ function detailPropertyElement() {
     const phoneErrorId = 'phone-error'
     const emailErrorId = 'email-error'
     const errorOkButton = `(//button[@type='button'])[21]`
+    const propertyInterestContainer = `//form[@id='message-agent-form']`
 
     return {
         propertySellButton,
@@ -30,7 +31,8 @@ function detailPropertyElement() {
         nameErrorId,
         phoneErrorId,
         emailErrorId,
-        errorOkButton
+        errorOkButton,
+        propertyInterestContainer
     };
 }
 

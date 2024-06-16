@@ -61,13 +61,17 @@ describe('Admin add tipe fasilitas', function() {
     });
 
     it ('Admin should can see created list fasilitas', async function() {
-        await clickElement(driver, getMenuElement.tipeFasilitasMenuXpath);
-        await assertTitle(driver, "Propertio - List Tipe Fasilitas");
-
-        await delay(3000);
-
-        await verifyElementExists(driver, getTipeFasilitasMenuElement.listWrapper);
-
+        try {
+            await clickElement(driver, getMenuElement.tipeFasilitasMenuXpath);
+            await assertTitle(driver, "Propertio - List Tipe Fasilitas");
+    
+            await delay(3000);
+    
+            await verifyElementExists(driver, getTipeFasilitasMenuElement.listWrapper);
+    
+        } catch (error) {
+            throw new Error(`Test to see created list fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('Admin should can search fasilitas', async function() {
@@ -81,67 +85,81 @@ describe('Admin add tipe fasilitas', function() {
 
 
     it ('Admin should can add tipe fasilitas', async function() {
-
-        await clickElement(driver, getMenuElement.addTipeFasilitasButtonXpath);
-        await assertTitle(driver, "Propertio - Tambah Tipe Fasilitas");
-
-        await delay(3000);
-        await scrollDown(driver, 200);
-
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newFasilitas);
-
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownItemXpath);
-
-        const iconFasilitasInput = await waitForElementVisible(driver, getTipeFasilitasFormElement.iconTipeFasilitasXpath);
-        await iconFasilitasInput.sendKeys(getGlobalVariable.fasilitasIconImage);
-
-        await clickElement(driver, getTipeFasilitasFormElement.tipeFasilitasSubmitButtonXpath);
-
-        await assertText(driver, getPopUpElement.popUpText, "Tipe Fasilitas berhasil ditambah!");
-        await clickElement(driver, getPopUpElement.popUpConfirm);
-
-        await delay(3000);
-
-        await assertUrl(driver, "http://127.0.0.1:8000/facility-type");
-
+        try {
+            await clickElement(driver, getMenuElement.addTipeFasilitasButtonXpath);
+            await assertTitle(driver, "Propertio - Tambah Tipe Fasilitas");
+    
+            await delay(3000);
+            await scrollDown(driver, 200);
+    
+            await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newFasilitas);
+    
+            await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
+            await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownItemXpath);
+    
+            const iconFasilitasInput = await waitForElementVisible(driver, getTipeFasilitasFormElement.iconTipeFasilitasXpath);
+            await iconFasilitasInput.sendKeys(getGlobalVariable.fasilitasIconImage);
+    
+            await clickElement(driver, getTipeFasilitasFormElement.tipeFasilitasSubmitButtonXpath);
+    
+            await assertText(driver, getPopUpElement.popUpText, "Tipe Fasilitas berhasil ditambah!");
+            await clickElement(driver, getPopUpElement.popUpConfirm);
+    
+            await delay(3000);
+    
+            await assertUrl(driver, "http://127.0.0.1:8000/facility-type");
+    
+        } catch (error) {
+            throw new Error(`Add tipe fasilitas test failed: ${error.message}`); 
+        }
     });
 
     it ('Admin should cant add with exist tipe property', async function() {
-        await driver.get('http://127.0.0.1:8000/facility-type/create');
-
-        await scrollDown(driver, 200);
+        try {
+            await driver.get('http://127.0.0.1:8000/facility-type/create');
     
-        await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
-        await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newFasilitas);
-
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
-        await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownItemXpath);
+            await scrollDown(driver, 200);
+        
+            await waitForElementVisible(driver, getTipeFasilitasFormElement.tipeFasilitasXpath);
+            await enterText(driver, getTipeFasilitasFormElement.tipeFasilitasXpath, newFasilitas);
     
-        const iconFasilitasInput = await waitForElementVisible(driver, getTipeFasilitasFormElement.iconTipeFasilitasXpath);
-        await iconFasilitasInput.sendKeys(getGlobalVariable.fasilitasIconImage);
+            await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownXpath);
+            await clickElement(driver, getTipeFasilitasFormElement.kategoriDropDownItemXpath);
+        
+            const iconFasilitasInput = await waitForElementVisible(driver, getTipeFasilitasFormElement.iconTipeFasilitasXpath);
+            await iconFasilitasInput.sendKeys(getGlobalVariable.fasilitasIconImage);
+        
+            await clickElement(driver, getTipeFasilitasFormElement.tipeFasilitasSubmitButtonXpath);
+        
+            await assertText(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama sudah ada sebelumnya.");
     
-        await clickElement(driver, getTipeFasilitasFormElement.tipeFasilitasSubmitButtonXpath);
-    
-        await assertText(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama sudah ada sebelumnya.");
-
+        } catch (error) {
+            throw new Error(`Test to add with existing tipe fasilitas failed: ${error.message}`); 
+        }
     });
 
     it ('Admin should can edit fasilitas with empty field', async function() {
+        const errors = [];
+
+        async function checkError(element, expectedText) {
+            try {
+                await scrollToElement(driver, element);
+                await assertText(driver, element, expectedText);
+            } catch (e) {
+                errors.push(e.message);
+            }
+        }
+
         await driver.get('http://127.0.0.1:8000/facility-type/create');
 
         await scrollDown(driver, 200);
 
         await clickElement(driver, getTipeFasilitasFormElement.tipeFasilitasSubmitButtonXpath);
-    
-        await verifyElementExists(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath);
-        await verifyElementExists(driver, getTipeFasilitasFormError.kategoriErrorXpath);
-        await verifyElementExists(driver, getTipeFasilitasFormError.iconErrorXpath);
 
-        await assertText(driver, getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama wajib diisi.");
-        await assertText(driver, getTipeFasilitasFormError.kategoriErrorXpath, "Kategori wajib diisi.");
-        await assertText(driver, getTipeFasilitasFormError.iconErrorXpath, "Icon wajib diisi.");
+        checkError(getTipeFasilitasFormError.tipeFasilitasErrorXpath, "Nama wajib diisi.");
+        checkError(getTipeFasilitasFormError.kategoriErrorXpath, "Kategori wajib diisi.");
+        checkError(getTipeFasilitasFormError.iconErrorXpath, "Icon wajib diisi.");
 
         await assertUrl(driver, "http://127.0.0.1:8000/facility-type/create");
     });

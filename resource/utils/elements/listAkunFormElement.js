@@ -9,7 +9,7 @@ function listAkunFormElement() {
     const phone = `//input[@id='phone']`
     const statusDropDownButton = `//button[@title='-- select Status --']`
     const statusActive = `//a[@id='bs-select-2-1']`
-    const statusInactive = `//a[@id='bs-select-2-2']`
+    const statusInactive = `//a[@role='option' and contains(@class, 'dropdown-item') and .//span[contains(text(), 'Tidak Aktif')]]`
     const provinceDropDownButton = `//button[@title='-- Pilih Provinsi --']`
     const provinceDropDownItem = `//a[@id='bs-select-3-14']`
     const cityDropDownButton = `//button[@title='-- Pilih Kota --']`
